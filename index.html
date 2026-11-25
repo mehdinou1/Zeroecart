@@ -231,7 +231,7 @@ body[data-swipe=l] .tab.on{animation:swl .28s ease-out}body[data-swipe=r] .tab.o
 @media(max-width:600px){.figbtn{max-width:220px}}
 @media(prefers-reduced-motion:reduce){.figbtn{transition:none}}
 .obn{display:block;margin:4px 0 14px}.obn input{display:block;width:100%;margin-top:4px}
-.tour-hl{position:fixed;z-index:9;border-radius:14px;box-shadow:0 0 0 9999px rgba(5,10,40,.62);pointer-events:none;transition:all .25s}
+.tour-blk{position:fixed;inset:0;z-index:9;background:transparent;touch-action:none}.tour-hl{position:fixed;z-index:9;border-radius:14px;box-shadow:0 0 0 9999px rgba(5,10,40,.62);pointer-events:none;transition:all .25s}
 .tour-b{position:fixed;z-index:10;background:var(--card);color:var(--ink);border-radius:16px;padding:14px 16px;width:min(320px,calc(100vw - 24px));box-shadow:0 14px 40px rgba(0,0,0,.3)}
 .tour-b p{margin:4px 0 10px;font-size:16px}.tour-b small{color:var(--mut)}
 .tour-b .acts{justify-content:space-between}.tour-b button{min-height:44px}
@@ -262,7 +262,7 @@ select{font:16px Barlow;min-height:44px;padding:0 10px;border-radius:10px;border
 .tabs{width:100%;display:flex;gap:6px;flex-wrap:wrap}
 .tabs a{color:#fff;text-decoration:none;font-weight:600;padding:0 18px;border-radius:999px;background:rgba(255,255,255,.14);min-height:44px;display:flex;align-items:center}
 .tabs a.on{background:#fff;color:var(--blue)}
-.tab{display:none}main{overflow-x:clip}.tab.on{display:block}.tab>section:first-child{margin-top:0!important}
+.tab{display:none}main{overflow-x:clip}.tab.peek{display:block;position:fixed;z-index:1;pointer-events:none;margin:0}.tab.on{display:block}.tab>section:first-child{margin-top:0!important}
 body:not([data-tab=aujourdhui]) .top{padding-bottom:clamp(22px,4vw,40px)}
 body:not([data-tab=aujourdhui]) main.band{padding-top:clamp(24px,4vw,40px)!important}
 .hrow{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;margin-bottom:16px}.hrow h2{margin:0}
@@ -490,7 +490,7 @@ body{padding-bottom:76px}.toast{bottom:84px}}
   <div class="acts"><button type="button" id="poses-x">Fermer</button></div>
 </div></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
-<div class="tour-hl" id="tour-hl" hidden></div>
+<div class="tour-blk" id="tour-blk" hidden></div><div class="tour-hl" id="tour-hl" hidden></div>
 <div class="tour-b" id="tour-b" role="dialog" aria-live="polite" hidden><small id="tour-n"></small><p id="tour-t"></p><div class="acts"><button type="button" id="tour-skip">Passer</button><button type="button" class="b-ok" id="tour-next">Suivant</button></div></div>
 <div class="toast" id="toast" role="status"><span id="toast-t"></span><button id="toast-u">Annuler</button></div>
 
@@ -892,27 +892,31 @@ $('recov').addEventListener('click',e=>{if(e.target.id==='rc-meal')openSheet('pl
 const TABS=['aujourdhui','recap','competitions','journal','reglages'];
 function showTab(){let t=location.hash.slice(1);if(!TABS.includes(t))t='aujourdhui';document.body.dataset.tab=t;
   TABS.forEach(n=>$('t-'+n).classList.toggle('on',n===t));document.querySelectorAll('#tabs a').forEach(a=>{a.classList.toggle('on',a.dataset.t===t);a.toggleAttribute('aria-current',a.dataset.t===t)})}
-window.addEventListener('hashchange',()=>{showTab();window.scrollTo(0,0)});showTab();
-{let sx=0,sy=0,dx=0,mode=-1,el=null,W=1,lx=0,lt=0,vx=0,busy=false;const main=document.querySelector('main');
+let keepScroll=false;window.addEventListener('hashchange',()=>{showTab();if(!keepScroll)window.scrollTo(0,0);keepScroll=false});showTab();
+{let sx=0,sy=0,dx=0,mode=-1,el=null,pk=null,pkI=-1,W=1,G=16,top0=0,lx=0,lt=0,vx=0,busy=false;const main=document.querySelector('main');
  const RM=matchMedia('(prefers-reduced-motion: reduce)'),EZ='cubic-bezier(.22,.8,.24,1)';
  const blocked=el=>!(el===document.documentElement||el===document.body||main.contains(el))||!!el.closest('input,textarea,select,.scroll,.fig,.chips,.sgrid,.modal,.sheet,#tabs,.rt,.onb')||!!document.querySelector('.modal:not([hidden])')||!$('onb').hidden;
  const cur=()=>TABS.indexOf(document.body.dataset.tab);
- const setX=(e,x,ms)=>{e.style.transition=ms?`transform ${ms}ms ${EZ},opacity ${ms}ms ${EZ}`:'none';e.style.transform=x?`translate3d(${x}px,0,0)`:'';e.style.opacity=x?String(1-Math.min(.4,Math.abs(x)/W*.55)):''};
- const clear=e=>{e.style.transition='';e.style.transform='';e.style.opacity='';e.style.willChange=''};
+ const mv=(e,x,ms)=>{if(!e)return;e.style.transition=ms?`transform ${ms}ms ${EZ}`:'none';e.style.transform=`translate3d(${x}px,0,0)`};
+ const clear=e=>{if(!e)return;e.classList.remove('peek');['transition','transform','willChange','top','left','width'].forEach(k=>e.style[k]='')};
+ function peek(i){if(i===pkI)return;clear(pk);pk=null;pkI=i;if(i<0||i>=TABS.length)return;
+   const r=el.getBoundingClientRect();pk=$('t-'+TABS[i]);pk.classList.add('peek');Object.assign(pk.style,{top:top0+'px',left:r.left+'px',width:r.width+'px',willChange:'transform'})}
+ function place(){const i=cur(),n=dx<0?i+1:i-1,has=n>=0&&n<TABS.length;peek(has?n:-1);const x=has?dx:dx*.22;mv(el,x,0);if(pk)mv(pk,x+(dx<0?W+G:-W-G),0);return has}
  document.addEventListener('touchstart',e=>{mode=-1;if(busy||e.touches.length!==1||tourI>=0||blocked(e.target))return;const t=e.touches[0];
-   sx=lx=t.clientX;sy=t.clientY;lt=Date.now();vx=0;dx=0;el=$('t-'+document.body.dataset.tab);W=main.clientWidth||innerWidth;if(el)mode=0},{passive:true});
+   sx=lx=t.clientX;sy=t.clientY;lt=Date.now();vx=0;dx=0;el=$('t-'+document.body.dataset.tab);if(el)mode=0},{passive:true});
  document.addEventListener('touchmove',e=>{if(mode<0)return;const t=e.touches[0],mx=t.clientX-sx,my=t.clientY-sy;
-   if(mode===0){if(Math.abs(mx)<8&&Math.abs(my)<8)return;if(Math.abs(mx)>Math.abs(my)*1.2){mode=1;el.style.willChange='transform'}else{mode=-1;return}}
-   if(e.cancelable)e.preventDefault();const now=Date.now();vx=vx*.4+.6*(t.clientX-lx)/Math.max(1,now-lt);lx=t.clientX;lt=now;
-   const i=cur(),edge=(mx>0&&i<=0)||(mx<0&&i>=TABS.length-1);dx=edge?mx*.22:mx;if(!RM.matches)setX(el,dx,0)},{passive:false});
- const end=()=>{if(mode!==1){mode=-1;return}mode=-1;const old=el,i=cur(),dir=dx<0?1:-1,nx=i+dir;
+   if(mode===0){if(Math.abs(mx)<8&&Math.abs(my)<8)return;if(Math.abs(mx)<=Math.abs(my)*1.2){mode=-1;return}
+     mode=1;const r=el.getBoundingClientRect();W=r.width;const tr=$('tabs').getBoundingClientRect(),minT=tr.top<60?tr.bottom:0;top0=Math.max(minT,r.top);el.style.willChange='transform';pkI=-1}
+   if(e.cancelable)e.preventDefault();const now=Date.now();vx=vx*.4+.6*(t.clientX-lx)/Math.max(1,now-lt);lx=t.clientX;lt=now;dx=mx;
+   if(!RM.matches)place()},{passive:false});
+ const end=()=>{if(mode!==1){mode=-1;return}mode=-1;const old=el,i=cur(),dir=dx<0?1:-1,nx=i+dir,np=pk;
    const go=nx>=0&&nx<TABS.length&&(Math.abs(dx)>W*.22||(Math.abs(vx)>.3&&Math.abs(dx)>20&&Math.sign(vx)===Math.sign(dx)));
-   if(!go){if(RM.matches)return clear(old);setX(old,0,240);setTimeout(()=>clear(old),260);return}
-   if(RM.matches){clear(old);location.hash=TABS[nx];return}
-   busy=true;const ms=Math.max(110,Math.min(200,(W-Math.abs(dx))/Math.max(.9,Math.abs(vx)*1.6)));setX(old,-dir*W,ms);
-   setTimeout(()=>{clear(old);location.hash=TABS[nx];showTab();window.scrollTo(0,0);
-     const ne=$('t-'+TABS[nx]);ne.style.willChange='transform';ne.style.transition='none';ne.style.transform=`translate3d(${dir*W*.3}px,0,0)`;ne.style.opacity='.35';ne.offsetWidth;
-     ne.style.transition=`transform 260ms ${EZ},opacity 220ms ${EZ}`;ne.style.transform='';ne.style.opacity='';setTimeout(()=>{clear(ne);busy=false},280)},ms)};
+   if(RM.matches){clear(old);clear(np);pk=null;pkI=-1;if(go)location.hash=TABS[nx];return}
+   busy=true;
+   if(!go){mv(old,0,240);if(np)mv(np,dx<0?W+G:-W-G,240);setTimeout(()=>{clear(old);clear(np);pk=null;pkI=-1;busy=false},260);return}
+   const ms=Math.round(Math.max(140,Math.min(280,(W-Math.abs(dx))/Math.max(1,Math.abs(vx)*1.4))));
+   mv(old,-dir*(W+G),ms);mv(np,0,ms);
+   setTimeout(()=>{clear(old);clear(np);pk=null;pkI=-1;keepScroll=true;location.hash=TABS[nx];showTab();const ne=$('t-'+TABS[nx]);window.scrollTo(0,Math.max(0,scrollY+ne.getBoundingClientRect().top-top0));busy=false},ms+20)};
  document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true});}
 // share card
 const CARDC={'--line':'rgba(255,255,255,.18)','--blue':'rgba(0,0,0,.28)','--skin':'#ecbb92','--skinD':'#b97a52','--skinL':'#fff3e6','--hair':'#2a1d16','--red':'#ff4b3e','--redD':'#b8261d'};
@@ -996,8 +1000,9 @@ const TOUR=[
   {t:'aujourdhui',sel:'#dayc',txt:()=>'Chaque soir, valide ton bilan et relève le défi du jour. Ta série de bilans fait grandir la flamme en haut de l’écran.'},
   {t:'aujourdhui',sel:'#tabs',txt:()=>'Récap, Compèts, Journal et Réglages sont ici. Tu peux aussi glisser ton doigt vers la gauche ou la droite pour changer d’onglet. Bonne préparation !'}];
 let tourI=-1;
-function startTour(){tourI=0;showTourStep()}
-function endTour(){tourI=-1;$('tour-hl').hidden=true;$('tour-b').hidden=true;if(!S.tour||S.tourV!==2){S.tour=true;S.tourV=2;save()}}
+let afterTour=null;
+function startTour(){document.querySelectorAll('.modal:not([hidden])').forEach(m=>m.hidden=true);tourI=0;$('tour-blk').hidden=false;showTourStep()}
+function endTour(){tourI=-1;$('tour-hl').hidden=true;$('tour-b').hidden=true;$('tour-blk').hidden=true;if(afterTour){const f=afterTour;afterTour=null;setTimeout(f,500)}if(!S.tour||S.tourV!==2){S.tour=true;S.tourV=2;save()}}
 function showTourStep(){const st=TOUR[tourI];if(!st)return endTour();if(location.hash.slice(1)!==st.t&&!(st.t==='aujourdhui'&&!location.hash))location.hash=st.t;
   const el=document.querySelector(st.sel);if(!el)return endTour();el.scrollIntoView({block:'center'});
   setTimeout(()=>{const r=el.getBoundingClientRect(),p=6,hl=$('tour-hl'),b=$('tour-b');
@@ -1008,6 +1013,7 @@ function showTourStep(){const st=TOUR[tourI];if(!st)return endTour();if(location
     b.style.top=top+'px';b.style.left=Math.min(vw-bw-12,Math.max(12,r.left+r.width/2-bw/2))+'px';$('tour-next').focus()},220)}
 $('tour-next').addEventListener('click',()=>{tourI++;showTourStep()});
 $('tour-skip').addEventListener('click',endTour);
+['touchmove','wheel'].forEach(ev=>$('tour-blk').addEventListener(ev,e=>e.preventDefault(),{passive:false}));['click','touchstart'].forEach(ev=>$('tour-blk').addEventListener(ev,e=>e.stopPropagation()));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&tourI>=0)endTour()});
 window.addEventListener('resize',()=>{if(tourI>=0)showTourStep()});
 $('tour-again').addEventListener('click',()=>{location.hash='aujourdhui';setTimeout(startTour,150)});
@@ -1225,7 +1231,7 @@ $('onb').addEventListener('click',e=>{const sx=e.target.closest('[data-sex]'),sp
   if(sp){obPick(sp.dataset.sport);if(obSport==='autre')$('ob-sname').focus()}});
 $('ob-back').addEventListener('click',()=>{$('ob2').hidden=true;$('ob1').hidden=false});
 $('ob-go').addEventListener('click',()=>{if(!obSex||!obSport)return;S.profile={sex:obSex,sport:obSport,sportName:obSport==='autre'?$('ob-sname').value.trim().slice(0,40):'',name:$('ob-name').value.trim().slice(0,24)};
-  $('onb').hidden=true;save();startTour()});
+  $('onb').hidden=true;save();afterTour=()=>{greetReturn();setTimeout(checkRecord,1500)};location.hash='aujourdhui';setTimeout(startTour,250)});
 function syncProfileUI(){const p=S.profile||{sex:'h',sport:'gam',sportName:''};if(document.activeElement!==$('s-sex'))$('s-sex').value=p.sex;if(document.activeElement!==$('s-sport'))$('s-sport').value=p.sport;
   $('s-sname-w').hidden=p.sport!=='autre';if(document.activeElement!==$('s-sname'))$('s-sname').value=p.sportName||'';if(document.activeElement!==$('s-name'))$('s-name').value=p.name||''}
 function setProfile(ch){S.profile={...(S.profile||{sex:'h',sport:'gam',sportName:''}),...ch};save()}
@@ -1235,9 +1241,7 @@ $('s-sname').addEventListener('change',e=>setProfile({sportName:e.target.value.t
 $('s-name').addEventListener('change',e=>setProfile({name:e.target.value.trim().slice(0,24)}));
 checkBadges(true);render();tick();setInterval(tick,1000);
 setInterval(()=>{const nb=checkBadges();if(nb.length){persist();celebrate();toast(badgeMsg(nb),false)}render();checkRecord()},60000);
-setTimeout(checkRecord,4000);
-setTimeout(greetReturn,2500);
-setTimeout(()=>{if(S.profile&&S.tour&&S.tourV!==2&&$('onb').hidden&&tourI<0){location.hash='aujourdhui';setTimeout(startTour,300)}},5200);
+if(S.profile&&(!S.tour||S.tourV!==2)){afterTour=()=>{greetReturn();setTimeout(checkRecord,1500)};location.hash='aujourdhui';setTimeout(()=>{if($('onb').hidden&&tourI<0)startTour()},600)}else{setTimeout(checkRecord,4000);setTimeout(greetReturn,2500)}
 
 // stockage local
 {const st=$('status');st.textContent='Tes données sont enregistrées sur ce téléphone. Pense à faire une sauvegarde de temps en temps.';
