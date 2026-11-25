@@ -165,6 +165,9 @@ summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:
 .obr{margin-top:14px;padding:0;min-height:44px;font-weight:600}
 .top{padding-top:max(clamp(22px,4vw,48px),env(safe-area-inset-top))}
 @media(max-width:600px){.tabs{top:0!important;bottom:auto!important;border-top:0!important;border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 6px 6px!important;box-shadow:0 4px 14px rgba(10,20,60,.08)}body{padding-bottom:24px!important;padding-top:calc(58px + env(safe-area-inset-top))}.top{padding-top:clamp(18px,4vw,40px)!important}.toast{bottom:72px!important}}
+@keyframes swl{from{opacity:.3;transform:translateX(40px)}to{opacity:1;transform:none}}@keyframes swr{from{opacity:.3;transform:translateX(-40px)}to{opacity:1;transform:none}}
+body[data-swipe=l] .tab.on{animation:swl .28s ease-out}body[data-swipe=r] .tab.on{animation:swr .28s ease-out}
+@media(prefers-reduced-motion:reduce){body[data-swipe] .tab.on{animation:none}}
 .mnav{display:flex;align-items:center;gap:6px}.mnav button{min-height:40px;width:40px;padding:0;font-size:22px}.mnav b{font-size:15px;min-width:8.5em;text-align:center;text-transform:capitalize}
 @keyframes figsalto{0%{transform:none}15%{transform:translateY(6px) scale(1.02,.96)}55%{transform:translateY(-70px) rotate(-200deg)}85%{transform:translateY(-10px) rotate(-360deg)}100%{transform:rotate(-360deg)}}
 #fig.salto{animation:figsalto 1.2s cubic-bezier(.3,.7,.4,1);transform-origin:50% 57%}
@@ -172,11 +175,11 @@ summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:
 .evl{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:10px 0 4px}
 .chips.evom label{background:color-mix(in srgb,var(--blue) 10%,var(--card));border-color:color-mix(in srgb,var(--blue) 35%,var(--card));color:var(--blue);font-weight:600}
 .chips.evom label:has(input:checked){background:var(--blue);border-color:var(--blue);color:#fff}
-.mtop{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:2;pointer-events:none}.mtop button{pointer-events:auto}
-.coinbtn{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:0 12px;border-radius:999px;background:var(--blue);color:#fff;font:700 16px Barlow}
+.mtop{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;z-index:2;pointer-events:none}.mtop button{pointer-events:auto;flex:none}
+.mtop .coinbtn{position:relative;display:inline-flex;align-items:center;gap:5px;min-height:38px;padding:0 14px 0 9px;white-space:nowrap;border-radius:999px;background:var(--blue);color:#fff;font:700 16px Barlow;font-variant-numeric:tabular-nums}.mtop .coinbtn svg{width:24px;height:24px;flex:none}
 .shopbtn{min-height:38px;padding:0 14px;border-radius:999px;background:var(--card);border:2px solid var(--blue);color:var(--blue);font:700 15px Barlow}
-.cpop{position:absolute;left:50%;top:-6px;font:800 15px Barlow;color:var(--blue);opacity:0;pointer-events:none;white-space:nowrap}
-.cpop.go{animation:cpop 1.4s ease-out}@keyframes cpop{0%{opacity:0;transform:translate(-50%,6px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-26px)}}
+.cpop{position:absolute;left:calc(100% + 6px);top:9px;font:800 15px Barlow;color:var(--blue);opacity:0;pointer-events:none;white-space:nowrap}
+.cpop.go{animation:cpop 1.4s ease-out}@keyframes cpop{0%{opacity:0;transform:translate(-4px,4px)}20%{opacity:1}100%{opacity:0;transform:translate(4px,-14px)}}
 .shopbox{max-width:600px;text-align:left}.shead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.shead h3{margin:0;font:700 28px/1 "Barlow Condensed"}
 .bal{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;border-radius:999px;padding:6px 12px;font-size:14px}.bal b{font-size:16px}
 .seg{display:flex;gap:6px;background:var(--tint);border-radius:12px;padding:4px;margin-bottom:12px}.seg button{flex:1;min-height:40px;background:transparent;border-radius:9px;font-size:15px}.seg button.on{background:var(--card);box-shadow:0 1px 4px rgba(0,0,0,.12)}
@@ -239,8 +242,9 @@ summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:
 .sw label{display:flex;align-items:center;gap:8px;font-weight:600;min-height:44px;cursor:pointer;padding-right:6px}
 .sw input[type=color]{width:44px;height:44px;border:0;padding:0;background:none;cursor:pointer;border-radius:50%}
 .sw label.on input{outline:3px solid var(--ink);outline-offset:2px;border-radius:50%}
-.onb{position:fixed;inset:0;z-index:8;background:var(--blue);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
-.obox{background:var(--card);border-radius:22px;padding:clamp(18px,4vw,30px);max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.onb{position:fixed;inset:0;z-index:8;background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--blue) 16%,var(--bg)) 0%,transparent 70%),radial-gradient(90% 45% at 100% 100%,color-mix(in srgb,var(--blue) 9%,var(--bg)) 0%,transparent 70%),var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:16px;overflow:auto}
+.onb{--obc:light-dark(var(--blue),color-mix(in srgb,var(--blue) 45%,#fff))}.onb .obr,.onb .lnk{color:var(--obc)}.obrand{display:flex;align-items:center;gap:10px;font:700 30px/1 'Barlow Condensed',Barlow,sans-serif;color:var(--obc);letter-spacing:.2px}.obrand i{width:12px;height:12px;border-radius:50%;background:var(--obc);box-shadow:16px 0 0 color-mix(in srgb,var(--obc) 40%,var(--bg))}.obrand span{margin-left:16px}
+.obox{background:var(--card);border-radius:22px;padding:clamp(18px,4vw,30px);max-width:520px;width:100%;border:1px solid color-mix(in srgb,var(--blue) 14%,var(--line));box-shadow:0 18px 50px color-mix(in srgb,var(--blue) 16%,transparent)}#ob-h:focus{outline:none}
 .obox h2{margin:2px 0 16px}.obox .k{margin:0}
 .opick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .opick button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;height:auto;border:2px solid var(--line);background:var(--tint);border-radius:16px}
@@ -443,8 +447,8 @@ body{padding-bottom:76px}.toast{bottom:84px}}
   <p class="k" id="share-h"></p>
   <div class="acts"><button class="b-ok" id="share-dl" type="button" hidden>Partager / enregistrer</button><button id="share-x" type="button">Fermer</button></div>
 </div></div>
-<div class="onb" id="onb" hidden><div class="obox" role="dialog" aria-modal="true" aria-labelledby="ob-h">
-  <div id="ob1"><p class="k">Bienvenue sur Zéro écart</p><h2 id="ob-h">Pour commencer, tu es…</h2>
+<div class="onb" id="onb" hidden><div class="obrand" aria-hidden="true"><i></i><span>Zéro écart</span></div><div class="obox" role="dialog" aria-modal="true" aria-labelledby="ob-h">
+  <div id="ob1"><p class="k">Bienvenue !</p><h2 id="ob-h" tabindex="-1">Pour commencer, tu es…</h2>
     <div class="opick"><button type="button" data-sex="h"><svg viewBox="0 0 240 300" id="pv-h" aria-hidden="true"></svg><b>Un homme</b></button><button type="button" data-sex="f"><svg viewBox="0 0 240 300" id="pv-f" aria-hidden="true"></svg><b>Une femme</b></button></div><label class="lnk filebtn obr">J’ai une sauvegarde à restaurer<input type="file" id="ob-file" accept=".json,application/json"></label></div>
   <div id="ob2" hidden><p class="k">Étape 2 sur 2</p>
     <label class="k obn">Ton prénom (affiché sur ta carte story)<input type="text" id="ob-name" maxlength="24" autocomplete="given-name" placeholder="Facultatif"></label>
@@ -502,7 +506,7 @@ const cat=k=>CATS.find(c=>c.k===k)||CATS[4];
 const isE=e=>e.kind?e.kind==='ecart':!e.planned, isR=e=>e.kind==='resist', isP=e=>e.kind?e.kind==='planned':!!e.planned;
 let S={start:Date.now(),comps:[],events:[]};
 let ref=null,writing=Promise.resolve(),lastDeleted=null,lastDelC=null,toastT=0,mode='ecart';
-const norm=d=>({coins:typeof d.coins==='number'?d.coins:undefined,earn:d.earn&&typeof d.earn==='object'?JSON.parse(JSON.stringify(d.earn)):{},owned:d.owned&&typeof d.owned==='object'?{...d.owned}:{},equip:d.equip&&typeof d.equip==='object'?{...d.equip}:{},defis:d.defis&&typeof d.defis==='object'?{...d.defis}:{},remind:d.remind&&typeof d.remind==='object'?{...d.remind}:null,lastVisit:typeof d.lastVisit==='number'?d.lastVisit:0,days:d.days&&typeof d.days==='object'?{...d.days}:{},cos:d.cos&&typeof d.cos==='object'?{...d.cos}:{},prep:d.prep&&typeof d.prep==='object'?JSON.parse(JSON.stringify(d.prep)):{},recCel:typeof d.recCel==='number'?d.recCel:0,pose:typeof d.pose==='string'?d.pose:null,leo:typeof d.leo==='string'&&/^#[0-9a-f]{6}$/i.test(d.leo)?d.leo:null,tour:!!d.tour,theme:typeof d.theme==='string'&&/^#[0-9a-f]{6}$/i.test(d.theme)?d.theme:null,profile:d.profile&&typeof d.profile==='object'?{...d.profile}:null,start:d.start,comps:Array.isArray(d.comps)?d.comps.map(c=>({...c})):d.comp?[{id:'c0',name:'Compétition',t:d.comp}]:[],events:Array.isArray(d.events)?[...d.events]:[],goals:d.goals&&typeof d.goals==='object'?{...d.goals}:{},badges:d.badges&&typeof d.badges==='object'?{...d.badges}:null});
+const norm=d=>({tourV:d.tourV||0,coins:typeof d.coins==='number'?d.coins:undefined,earn:d.earn&&typeof d.earn==='object'?JSON.parse(JSON.stringify(d.earn)):{},owned:d.owned&&typeof d.owned==='object'?{...d.owned}:{},equip:d.equip&&typeof d.equip==='object'?{...d.equip}:{},defis:d.defis&&typeof d.defis==='object'?{...d.defis}:{},remind:d.remind&&typeof d.remind==='object'?{...d.remind}:null,lastVisit:typeof d.lastVisit==='number'?d.lastVisit:0,days:d.days&&typeof d.days==='object'?{...d.days}:{},cos:d.cos&&typeof d.cos==='object'?{...d.cos}:{},prep:d.prep&&typeof d.prep==='object'?JSON.parse(JSON.stringify(d.prep)):{},recCel:typeof d.recCel==='number'?d.recCel:0,pose:typeof d.pose==='string'?d.pose:null,leo:typeof d.leo==='string'&&/^#[0-9a-f]{6}$/i.test(d.leo)?d.leo:null,tour:!!d.tour,theme:typeof d.theme==='string'&&/^#[0-9a-f]{6}$/i.test(d.theme)?d.theme:null,profile:d.profile&&typeof d.profile==='object'?{...d.profile}:null,start:d.start,comps:Array.isArray(d.comps)?d.comps.map(c=>({...c})):d.comp?[{id:'c0',name:'Compétition',t:d.comp}]:[],events:Array.isArray(d.events)?[...d.events]:[],goals:d.goals&&typeof d.goals==='object'?{...d.goals}:{},badges:d.badges&&typeof d.badges==='object'?{...d.badges}:null});
 try{const l=JSON.parse(localStorage.getItem(LS));if(l&&Array.isArray(l.events))S=norm(l)}catch(e){}
 S=norm(S);
 
@@ -620,7 +624,7 @@ function figSVG(f,sex,pose){
   const head=`<g transform="translate(0 ${o})">
    <ellipse cx="99.5" cy="78" rx="4" ry="6" fill="var(--skinD)"/><ellipse cx="140.5" cy="78" rx="4" ry="6" fill="var(--skinD)"/>
    <path d="M100 72 C100 51 140 51 140 72 C140 89 132 101 120 103 C108 101 100 89 100 72Z" fill="var(--skin)"/>
-   <path d="M98 72 C95 52 110 44 123 45 C139 46 145 58 142 72 C138 61 128 58 117 60 C108 62 102 66 98 72Z" fill="var(--hair)"/>
+   <path d="M99.3 73 C98.4 41.5 141.6 41.5 140.7 73 C139.6 68.5 137.4 65 133.8 63 C127 59.6 112 59.6 106.2 63 C102.6 65 100.4 68.5 99.3 73Z" fill="var(--hair)"/><path d="M107 57.5 C112.5 53.2 119.5 52.6 125 53.6" stroke="#4a3428" stroke-width="1.6" fill="none" stroke-linecap="round"/>
    <path d="M106 ${k>.45?71:73} Q111 ${k>.45?68:70} 116 ${k>.45?70:72} M124 ${k>.45?70:72} Q129 ${k>.45?68:70} 134 ${k>.45?71:73}" stroke="var(--hair)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
    ${k>.4?`<ellipse cx="111" cy="79" rx="2.8" ry="3.4" fill="var(--hair)"/><ellipse cx="129" cy="79" rx="2.8" ry="3.4" fill="var(--hair)"/>`:`<path d="M107 80 Q111 82 115 80 M125 80 Q129 82 133 80" stroke="var(--hair)" stroke-width="2.4" fill="none" stroke-linecap="round"/>`}
    <path d="M119 82 Q117 88 120 89" stroke="var(--skinD)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
@@ -654,9 +658,9 @@ function figF(f,pose){
   const leg=`<path d="M99 204 C96 220 97 235 101 247 C100 256 101 266 103 275 L109.5 275 C111 266 111.5 256 110.5 248 C113.5 236 116.5 220 117.5 204Z" fill="var(--skin)"/>
    <ellipse cx="105" cy="277" rx="8.5" ry="4" fill="var(--skin)"/>`;
   const head=`<g transform="translate(0 ${o})">
-   <circle cx="120" cy="40" r="12" fill="var(--hair)"/><ellipse cx="120" cy="50" rx="8" ry="3.2" fill="var(--leo)"/>
+   <circle cx="120" cy="41" r="12" fill="var(--hair)"/>
    <path d="M101 72 C101 52 139 52 139 72 C139 88 131 99 120 101 C109 99 101 88 101 72Z" fill="var(--skin)"/>
-   <path d="M99 76 C95 54 108 47 120 47 C132 47 145 54 141 76 C138 63 129 58 120 58 C111 58 102 63 99 76Z" fill="var(--hair)"/>
+   <path d="M100.2 74 C99.3 45 140.7 45 139.8 74 C138.8 69 136.4 65.2 132.4 63 C125.6 59.8 114.4 59.8 107.6 63 C103.6 65.2 101.2 69 100.2 74Z" fill="var(--hair)"/><ellipse cx="120" cy="52" rx="8" ry="3" fill="var(--leo)"/>
    <path d="M107 ${k>.45?71:73} Q111 ${k>.45?69:71} 115 ${k>.45?70:72} M125 ${k>.45?70:72} Q129 ${k>.45?69:71} 133 ${k>.45?71:73}" stroke="var(--hair)" stroke-width="2" fill="none" stroke-linecap="round"/>
    ${k>.4?`<ellipse cx="111" cy="79" rx="2.7" ry="3.3" fill="var(--hair)"/><ellipse cx="129" cy="79" rx="2.7" ry="3.3" fill="var(--hair)"/><path d="M107.5 76.5l-2.5-2 M132.5 76.5l2.5-2" stroke="var(--hair)" stroke-width="1.6" stroke-linecap="round"/>`:`<path d="M107 80 Q111 82 115 80 M125 80 Q129 82 133 80" stroke="var(--hair)" stroke-width="2.2" fill="none" stroke-linecap="round"/>`}
    <ellipse cx="106" cy="88" rx="4" ry="2.4" fill="#ff8f86" opacity=".45"/><ellipse cx="134" cy="88" rx="4" ry="2.4" fill="#ff8f86" opacity=".45"/>
@@ -889,6 +893,13 @@ const TABS=['aujourdhui','recap','competitions','journal','reglages'];
 function showTab(){let t=location.hash.slice(1);if(!TABS.includes(t))t='aujourdhui';document.body.dataset.tab=t;
   TABS.forEach(n=>$('t-'+n).classList.toggle('on',n===t));document.querySelectorAll('#tabs a').forEach(a=>{a.classList.toggle('on',a.dataset.t===t);a.toggleAttribute('aria-current',a.dataset.t===t)})}
 window.addEventListener('hashchange',()=>{showTab();window.scrollTo(0,0)});showTab();
+{let sx=0,sy=0,st=0,ok=false;const main=document.querySelector('main');
+ const blocked=el=>el.closest('input,textarea,select,.scroll,.fig,.chips,.sgrid,.modal,.sheet,#tabs,.rt')||!!document.querySelector('.modal:not([hidden])');
+ main.addEventListener('touchstart',e=>{if(e.touches.length!==1||tourI>=0){ok=false;return}const t=e.touches[0];sx=t.clientX;sy=t.clientY;st=Date.now();ok=!blocked(e.target)},{passive:true});
+ main.addEventListener('touchend',e=>{if(!ok)return;ok=false;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+   if(Date.now()-st>700||Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.8)return;
+   const cur=TABS.indexOf(document.body.dataset.tab),nx=cur+(dx<0?1:-1);if(nx<0||nx>=TABS.length)return;
+   document.body.dataset.swipe=dx<0?'l':'r';location.hash=TABS[nx];setTimeout(()=>{delete document.body.dataset.swipe},350)},{passive:true});}
 // share card
 const CARDC={'--line':'rgba(255,255,255,.18)','--blue':'rgba(0,0,0,.28)','--skin':'#ecbb92','--skinD':'#b97a52','--skinL':'#fff3e6','--hair':'#2a1d16','--red':'#ff4b3e','--redD':'#b8261d'};
 let cardBlob=null,cardURL='';
@@ -965,11 +976,14 @@ $('sw').addEventListener('change',e=>{if(e.target.id!=='sw-custom')return;const 
 // petit guide
 const TOUR=[
   {t:'aujourdhui',sel:'#btn-ecart',txt:()=>'Un écart ? Note-le ici. Le compteur repart à zéro et '+G('ton gymnaste','ta gymnaste')+' perd un peu de forme.'},
-  {t:'aujourdhui',sel:'#btn-res',txt:()=>'Une envie à laquelle tu as résisté ? Note-la ici : ça redonne de la forme et ça compte pour tes badges.'},
-  {t:'aujourdhui',sel:'#tabs',txt:()=>'Tes graphiques et badges sont dans Récap, tes compétitions et résultats dans Compèts, et tout se personnalise dans Réglages. Bonne préparation !'}];
+  {t:'aujourdhui',sel:'#btn-res',txt:()=>'Une envie à laquelle tu as résisté ? Note-la ici : ça redonne de la forme et ça rapporte des protéines.'},
+  {t:'aujourdhui',sel:'#figbtn',txt:()=>'Touche '+G('ton personnage','ta gymnaste')+' pour changer de pose.'},
+  {t:'aujourdhui',sel:'.mtop',txt:()=>'Tes protéines s’affichent ici. Gagne-en chaque jour, puis dépense-les dans la Boutique en matériel et en décors.'},
+  {t:'aujourdhui',sel:'#dayc',txt:()=>'Chaque soir, valide ton bilan et relève le défi du jour. Ta série de bilans fait grandir la flamme en haut de l’écran.'},
+  {t:'aujourdhui',sel:'#tabs',txt:()=>'Récap, Compèts, Journal et Réglages sont ici. Tu peux aussi glisser ton doigt vers la gauche ou la droite pour changer d’onglet. Bonne préparation !'}];
 let tourI=-1;
 function startTour(){tourI=0;showTourStep()}
-function endTour(){tourI=-1;$('tour-hl').hidden=true;$('tour-b').hidden=true;if(!S.tour){S.tour=true;save()}}
+function endTour(){tourI=-1;$('tour-hl').hidden=true;$('tour-b').hidden=true;if(!S.tour||S.tourV!==2){S.tour=true;S.tourV=2;save()}}
 function showTourStep(){const st=TOUR[tourI];if(!st)return endTour();if(location.hash.slice(1)!==st.t&&!(st.t==='aujourdhui'&&!location.hash))location.hash=st.t;
   const el=document.querySelector(st.sel);if(!el)return endTour();el.scrollIntoView({block:'center'});
   setTimeout(()=>{const r=el.getBoundingClientRect(),p=6,hl=$('tour-hl'),b=$('tour-b');
@@ -1190,7 +1204,7 @@ $('coach-dl').addEventListener('click',async()=>{if(!coachBlob)return;const name
 let obSex=null,obSport=null;
 function checkOnb(){if(S.profile){$('onb').hidden=true;return}if(!$('onb').hidden)return;
   $('pv-h').innerHTML=figSVG(100,'h').replace(' id="fig-g"','');$('pv-f').innerHTML=figSVG(100,'f').replace(' id="fig-g"','');
-  $('ob1').hidden=false;$('ob2').hidden=true;$('onb').hidden=false;setTimeout(()=>{const b=$('onb').querySelector('[data-sex]');if(b)b.focus()},50)}
+  $('ob1').hidden=false;$('ob2').hidden=true;$('onb').hidden=false;setTimeout(()=>{const h=$('ob-h');if(h)h.focus({preventScroll:true})},50)}
 function obPick(sp){obSport=sp;document.querySelectorAll('[data-sport]').forEach(b=>b.classList.toggle('on',b.dataset.sport===sp));$('ob-other').hidden=sp!=='autre';$('ob-go').disabled=!sp}
 $('onb').addEventListener('click',e=>{const sx=e.target.closest('[data-sex]'),sp=e.target.closest('[data-sport]');
   if(sx){obSex=sx.dataset.sex;$('ob1').hidden=true;$('ob2').hidden=false;obPick(obSex==='f'?'gaf':'gam');$('ob-go').focus()}
@@ -1209,6 +1223,7 @@ checkBadges(true);render();tick();setInterval(tick,1000);
 setInterval(()=>{const nb=checkBadges();if(nb.length){persist();celebrate();toast(badgeMsg(nb),false)}render();checkRecord()},60000);
 setTimeout(checkRecord,4000);
 setTimeout(greetReturn,2500);
+setTimeout(()=>{if(S.profile&&S.tour&&S.tourV!==2&&$('onb').hidden&&tourI<0){location.hash='aujourdhui';setTimeout(startTour,300)}},5200);
 
 // stockage local
 {const st=$('status');st.textContent='Tes données sont enregistrées sur ce téléphone. Pense à faire une sauvegarde de temps en temps.';
