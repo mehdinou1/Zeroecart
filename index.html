@@ -150,7 +150,7 @@ summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:
 .resf .row label{font-size:14px;color:var(--mut)}.resf .row input{width:6em;margin-top:4px;font:16px Barlow;min-height:44px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:0 10px}
 .resf small{font-size:13px;color:var(--mut)}
 .rt .fn b{font:inherit}.rt .exm{display:none}
-@media(max-width:480px){.rt .ex,.rt th:nth-child(5){display:none}.rt .exm{display:block;font:500 12px Barlow;color:var(--mut)}.rt input{min-width:0;padding:0 2px}.rt td{padding:3px 2px}.rt th{padding:4px 2px}.rt .fn{min-width:3.6em;font-size:16px}.rt td:first-child{font-size:13px;width:28%}.rt tfoot td:first-child{width:auto}}
+@media(max-width:480px){.rt .ex,.rt th:nth-child(5){display:none}.rtac th:nth-child(5){display:table-cell}.rtac .exm{display:block;font:500 12px Barlow;color:var(--mut)}.rt .exm{display:block;font:500 12px Barlow;color:var(--mut)}.rt input{min-width:0;padding:0 2px}.rt td{padding:3px 2px}.rt th{padding:4px 2px}.rt .fn{min-width:3.6em;font-size:16px}.rt td:first-child{font-size:13px;width:28%}.rt tfoot td:first-child{width:auto}}
 .comps .b-ok{background:var(--blue);color:#fff;padding:0 18px}.comps .resf button{min-height:44px}
 .comps li span{display:block;font-size:14px;color:var(--mut)}.comps li em{font-style:normal;font-weight:600;white-space:nowrap}
 .comps li.next em{color:var(--blue)}.comps li.past .ch{opacity:.7}
@@ -396,9 +396,11 @@ body{padding-bottom:76px}.toast{bottom:84px}}
     </form>
     <div class="panel" id="evo-p" style="margin-top:16px" hidden>
       <h3>Évolution de tes notes</h3>
+      <small class="evl" id="evo-ll" hidden>Niveau</small>
+      <div class="chips evom" id="evo-l" hidden></div>
       <small class="evl" id="evo-ml">Type de note</small>
       <div class="chips evom" id="evo-m"></div>
-      <small class="evl">Agrès</small>
+      <small class="evl" id="evo-cl">Agrès</small>
       <div class="chips" id="evo-ch"></div>
       <div class="fig" style="min-height:220px;margin-top:10px"><svg id="evo"></svg></div>
     </div>
@@ -420,7 +422,9 @@ body{padding-bottom:76px}.toast{bottom:84px}}
       <div class="row" style="margin-top:8px">
         <label>Début du défi<br><input type="datetime-local" id="s-start"></label>
         <label>Je suis<br><select id="s-sex"><option value="h">Un homme</option><option value="f">Une femme</option></select></label>
-        <label>Activité<br><select id="s-sport"><option value="gam">Gym artistique masculine</option><option value="gaf">Gym artistique féminine</option><option value="autre">Autre sport</option></select></label>
+        <label>Activité<br><select id="s-sport"><option value="gam">Gym artistique masculine</option><option value="gaf">Gym artistique féminine</option><option value="gac">Gym acrobatique</option><option value="autre">Autre sport</option></select></label>
+        <label id="s-gcat-w" hidden>Catégorie<br><select id="s-gcat"></select></label>
+        <label id="s-grole-w" hidden>Rôle<br><select id="s-grole"></select></label>
         <label id="s-sname-w">Quel sport ?<br><input type="text" id="s-sname" maxlength="40"></label>
         <label>Prénom<br><input type="text" id="s-name" maxlength="24" placeholder="Facultatif"></label>
       </div>
@@ -456,8 +460,10 @@ body{padding-bottom:76px}.toast{bottom:84px}}
     <div class="olist">
       <button type="button" data-sport="gam"><b>Gymnastique artistique masculine</b><span>Sol, arçons, anneaux, saut, barres parallèles, barre fixe</span></button>
       <button type="button" data-sport="gaf"><b>Gymnastique artistique féminine</b><span>Saut, barres asymétriques, poutre, sol</span></button>
+      <button type="button" data-sport="gac"><b>Gymnastique acrobatique</b><span>Duo, trio ou quatuor : statique, dynamique, combiné</span></button>
       <button type="button" data-sport="autre"><b>Autre sport</b><span>Résultat libre : note, score ou temps, classement</span></button>
     </div>
+    <div id="ob-gac" class="row" hidden><label class="k">Catégorie<br><select id="ob-gcat"></select></label><label class="k">Rôle<br><select id="ob-grole"></select></label></div>
     <label id="ob-other" hidden class="k">Quel sport ?<input type="text" id="ob-sname" maxlength="40" placeholder="Ex. trampoline, judo, natation…"></label>
     <div class="acts"><button type="button" id="ob-back">Retour</button><button type="button" class="b-ok" id="ob-go" disabled>C'est parti</button></div>
     <p class="k" style="font-size:13px;margin:6px 0 0">Tu pourras changer ça plus tard dans l'onglet Réglages.</p></div>
@@ -506,7 +512,7 @@ const cat=k=>CATS.find(c=>c.k===k)||CATS[4];
 const isE=e=>e.kind?e.kind==='ecart':!e.planned, isR=e=>e.kind==='resist', isP=e=>e.kind?e.kind==='planned':!!e.planned;
 let S={start:Date.now(),comps:[],events:[]};
 let ref=null,writing=Promise.resolve(),lastDeleted=null,lastDelC=null,toastT=0,mode='ecart';
-const norm=d=>({tourV:d.tourV||0,coins:typeof d.coins==='number'?d.coins:undefined,earn:d.earn&&typeof d.earn==='object'?JSON.parse(JSON.stringify(d.earn)):{},owned:d.owned&&typeof d.owned==='object'?{...d.owned}:{},equip:d.equip&&typeof d.equip==='object'?{...d.equip}:{},defis:d.defis&&typeof d.defis==='object'?{...d.defis}:{},remind:d.remind&&typeof d.remind==='object'?{...d.remind}:null,lastVisit:typeof d.lastVisit==='number'?d.lastVisit:0,days:d.days&&typeof d.days==='object'?{...d.days}:{},cos:d.cos&&typeof d.cos==='object'?{...d.cos}:{},prep:d.prep&&typeof d.prep==='object'?JSON.parse(JSON.stringify(d.prep)):{},recCel:typeof d.recCel==='number'?d.recCel:0,pose:typeof d.pose==='string'?d.pose:null,leo:typeof d.leo==='string'&&/^#[0-9a-f]{6}$/i.test(d.leo)?d.leo:null,tour:!!d.tour,theme:typeof d.theme==='string'&&/^#[0-9a-f]{6}$/i.test(d.theme)?d.theme:null,profile:d.profile&&typeof d.profile==='object'?{...d.profile}:null,start:d.start,comps:Array.isArray(d.comps)?d.comps.map(c=>({...c})):d.comp?[{id:'c0',name:'Compétition',t:d.comp}]:[],events:Array.isArray(d.events)?[...d.events]:[],goals:d.goals&&typeof d.goals==='object'?{...d.goals}:{},badges:d.badges&&typeof d.badges==='object'?{...d.badges}:null});
+const norm=d=>({tourV:d.tourV||0,coins:typeof d.coins==='number'?d.coins:undefined,earn:d.earn&&typeof d.earn==='object'?JSON.parse(JSON.stringify(d.earn)):{},owned:d.owned&&typeof d.owned==='object'?{...d.owned}:{},equip:d.equip&&typeof d.equip==='object'?{...d.equip}:{},defis:d.defis&&typeof d.defis==='object'?{...d.defis}:{},remind:d.remind&&typeof d.remind==='object'?{...d.remind}:null,lastVisit:typeof d.lastVisit==='number'?d.lastVisit:0,days:d.days&&typeof d.days==='object'?{...d.days}:{},cos:d.cos&&typeof d.cos==='object'?{...d.cos}:{},prep:d.prep&&typeof d.prep==='object'?JSON.parse(JSON.stringify(d.prep)):{},recCel:typeof d.recCel==='number'?d.recCel:0,pose:typeof d.pose==='string'?d.pose:null,poseAc:typeof d.poseAc==='string'?d.poseAc:null,leo:typeof d.leo==='string'&&/^#[0-9a-f]{6}$/i.test(d.leo)?d.leo:null,tour:!!d.tour,theme:typeof d.theme==='string'&&/^#[0-9a-f]{6}$/i.test(d.theme)?d.theme:null,profile:d.profile&&typeof d.profile==='object'?{...d.profile}:null,start:d.start,comps:Array.isArray(d.comps)?d.comps.map(c=>({...c})):d.comp?[{id:'c0',name:'Compétition',t:d.comp}]:[],events:Array.isArray(d.events)?[...d.events]:[],goals:d.goals&&typeof d.goals==='object'?{...d.goals}:{},badges:d.badges&&typeof d.badges==='object'?{...d.badges}:null});
 try{const l=JSON.parse(localStorage.getItem(LS));if(l&&Array.isArray(l.events))S=norm(l)}catch(e){}
 S=norm(S);
 
@@ -529,18 +535,26 @@ const count=(fn,a,b)=>S.events.filter(e=>fn(e)&&e.t>=a&&e.t<b).length;
 
 const nextC=n=>[...S.comps].sort((a,b)=>a.t-b.t).find(c=>c.t>n)||null, lastC=n=>[...S.comps].sort((a,b)=>b.t-a.t).find(c=>c.t<=n)||null;
 const APPS={gam:[{k:'sol',n:'Sol'},{k:'arcons',n:"Cheval d'arçons"},{k:'anneaux',n:'Anneaux'},{k:'saut',n:'Saut'},{k:'barres',n:'Barres parallèles'},{k:'fixe',n:'Barre fixe'}],
-  gaf:[{k:'saut',n:'Saut'},{k:'asym',n:'Barres asymétriques'},{k:'poutre',n:'Poutre'},{k:'sol',n:'Sol'}]};
-const SPORTS={gam:'Gymnastique artistique masculine',gaf:'Gymnastique artistique féminine',autre:'Autre sport'};
+  gaf:[{k:'saut',n:'Saut'},{k:'asym',n:'Barres asymétriques'},{k:'poutre',n:'Poutre'},{k:'sol',n:'Sol'}],
+  gac:[{k:'statique',n:'Statique'},{k:'dynamique',n:'Dynamique'},{k:'combine',n:'Combiné'}]};
+const SPORTS={gam:'Gymnastique artistique masculine',gaf:'Gymnastique artistique féminine',gac:'Gymnastique acrobatique',autre:'Autre sport'};
+const GACCAT={'2F':'Duo féminin','2H':'Duo masculin','2Mx':'Duo mixte',trio:'Trio féminin',quatuor:'Quatuor masculin'};
+const GACROLE={porteur:['Porteur','Porteuse'],voltigeur:['Voltigeur','Voltigeuse'],inter:['Intermédiaire','Intermédiaire']};
+const roleName=(r,sx)=>{const x=GACROLE[r]||GACROLE.porteur;return sx==='f'?x[1]:x[0]};
+const rolesFor=cat=>cat==='trio'||cat==='quatuor'?['porteur','inter','voltigeur']:['porteur','voltigeur'];
+const isAc=()=>!!(S.profile&&S.profile.sport==='gac');
+const acRole=()=>{const r=S.profile&&S.profile.gacRole;return GACROLE[r]?r:'porteur'};
 const curDisc=()=>S.profile&&SPORTS[S.profile.sport]?S.profile.sport:'gam';
 const discOf=r=>r&&r.disc?r.disc:'gam';
-const appsOf=r=>APPS[discOf(r)]||[];
-const appName=k=>(APPS.gam.find(a=>a.k===k)||APPS.gaf.find(a=>a.k===k)||{n:k}).n;
+const GACF=[{k:'passage',n:'Passage'}],GACLVL={fed:'Fédéral (1 passage)',perf:'Performance / Élite (3 exercices)'};
+const appsOf=r=>discOf(r)==='gac'&&r.lvl==='fed'?GACF:APPS[discOf(r)]||[];
+const appName=k=>(APPS.gam.find(a=>a.k===k)||APPS.gaf.find(a=>a.k===k)||APPS.gac.find(a=>a.k===k)||GACF.find(a=>a.k===k)||{n:k}).n;
 const G=(m,f)=>S.profile&&S.profile.sex==='f'?f:m;
 const fmtS=x=>x.toLocaleString('fr-FR',{maximumFractionDigits:3});
 const num=v=>{const s=String(v==null?'':v).trim().replace(',','.');if(!s)return null;const x=parseFloat(s);return isFinite(x)?x:null};
 const fmt=x=>x.toLocaleString('fr-FR',{minimumFractionDigits:3,maximumFractionDigits:3});
 const execOf=a=>a?(a.f!=null?Math.round((10-a.f)*1000)/1000:a.e!=null?a.e:null):null;
-const finalOf=a=>{const e=execOf(a);return a&&a.d!=null&&e!=null?Math.max(0,Math.round((a.d+e-(a.p||0))*1000)/1000):null};
+const finalOf=a=>{if(a&&'art' in a){if(a.e==null)return null;return Math.max(0,Math.round(((a.d||0)+(a.art||0)+2*a.e-(a.p||0))*1000)/1000)}const e=execOf(a);return a&&a.d!=null&&e!=null?Math.max(0,Math.round((a.d+e-(a.p||0))*1000)/1000):null};
 const totalOf=r=>{if(discOf(r)==='autre')return r.score!=null?{s:r.score,n:0}:null;let s=0,n=0;for(const a of appsOf(r)){const f=finalOf(r.app&&r.app[a.k]);if(f!=null){s+=f;n++}}return n?{s:Math.round(s*1000)/1000,n}:null};
 let editC=null,evoSel=null;
 function lastEcart(now){const u=ecartTimes().filter(t=>t<=now);return u.length?Math.max(u[u.length-1],S.start):S.start}
@@ -586,12 +600,19 @@ const PHXDEF='<defs><linearGradient id="zs-ph" x1="0" y1="1" x2="0" y2="0"><stop
 function FLM(cx,y,w){let s='';[-.75,-.35,0,.35,.75].forEach((o,i)=>{const x=cx+o*w,hh=i%2?12:18;s+=`<path d="M${(x-5).toFixed(1)} ${y} Q${(x-6).toFixed(1)} ${y-hh*.55} ${x.toFixed(1)} ${y-hh} Q${(x+1.5).toFixed(1)} ${y-hh*.45} ${(x+5).toFixed(1)} ${y}Z" fill="#ffd34d" opacity=".95"/><path d="M${(x-2.2).toFixed(1)} ${y} Q${(x-2.6).toFixed(1)} ${y-hh*.35} ${x.toFixed(1)} ${y-hh*.6} Q${(x+.8).toFixed(1)} ${y-hh*.3} ${(x+2.2).toFixed(1)} ${y}Z" fill="#fff3c4"/>`});return s}
 const POSES_H=[['salut','Salut aux juges'],['victoire','Victoire'],['croix','Croix de fer'],['ecart','Grand écart'],['atr','Équilibre (ATR)']];
 const POSES_F=[['salut','Salut aux juges'],['victoire','Victoire'],['ecart','Grand écart'],['arabesque','Arabesque sur poutre'],['atr','Équilibre (ATR)']];
-const posesFor=sx=>sx==='f'?POSES_F:POSES_H;
+const POSES_AC=[['salut_ac','Salut acro'],['porte','Porté en duo'],['victoire','Victoire'],['atr','Équilibre (ATR)'],['ecart','Grand écart']];
+const posesFor=(sx,ac=isAc())=>ac?POSES_AC:sx==='f'?POSES_F:POSES_H;
+function SIL(ty,sc,arms){const c='#7d86ad',a=arms==='up'?'M98 126 Q86 108 101 86 M142 126 Q154 108 139 86':arms==='hs'?'M98 126 L87 54 M142 126 L153 54':'M98 126 L68 72 M142 126 L172 72';
+  return `<g transform="${arms==='hs'?`translate(120 ${ty}) scale(${sc}) rotate(180) translate(-120 -54)`:`translate(120 ${ty}) scale(${sc}) translate(-120 -281)`}" opacity=".5"><circle cx="120" cy="80" r="18" fill="${c}"/><path d="M114 96 h12 v14 h-12z" fill="${c}"/><path d="M98 116 Q120 106 142 116 L144 198 L96 198Z" fill="${c}"/><path d="M97 190 L117 194 L97 281 L83 281Z M123 194 L143 190 L157 281 L143 281Z" fill="${c}"/><path d="${a}" stroke="${c}" stroke-width="13" stroke-linecap="round" fill="none"/></g>`}
 const BEAM='<rect x="36" y="279" width="168" height="11" rx="3" fill="#caa47c"/><path d="M66 290 L58 300 M174 290 L182 300" stroke="#8a6a4a" stroke-width="5"/>';
 function poseCfg(pose,th,sy,sh,lean){
   const mat0='<rect x="20" y="279" width="200" height="14" rx="7" fill="var(--blue)" opacity=".9"/>',mat=cosOn('podium')?mat0.replace('opacity=".9"','opacity=".35"')+PODIUM:mat0;
   const def={as:1,thL:th,thR:th,body:`rotate(${lean} 120 278)`,mat,over:'',under:'',legs:'',legL:'',legR:'',upper:'',hips:'',extra:true};
   if(pose==='victoire')return {...def,thL:168,thR:22};
+  if(pose==='salut_ac')return {...def,thL:166,thR:92};
+  if(pose==='porte'){const r=acRole(),K=.64,wr=ty=>`translate(120 ${ty}) scale(${K}) translate(-120 -281)`,shY=281-K*(281-(sy+8));
+    if(r==='voltigeur')return {...def,thL:146,thR:146,body:'rotate(0)',wrap:wr(281-K*159),front:SIL(281,K,'up'),extra:false};
+    const hY=281-K*(281-(sy+8)+62);return {...def,thL:176,thR:176,body:'rotate(0)',wrap:wr(281),back:SIL(hY,r==='inter'?.48:.56,'hs'),extra:false}}
   if(pose==='croix'){const hy=sy+8-26,hx=sh+62;return {...def,sokol:true,thL:90,thR:90,body:'translate(0 -26)',extra:false,
     mat:'<rect x="20" y="279" width="200" height="14" rx="7" fill="var(--blue)" opacity=".35"/>',
     over:`<g stroke="#7a5a3c" stroke-width="2.6"><line x1="${120-hx}" y1="0" x2="${120-hx}" y2="${hy-9}"/><line x1="${120+hx}" y1="0" x2="${120+hx}" y2="${hy-9}"/></g><g fill="none" stroke="#d9a066" stroke-width="4.5"><circle cx="${120-hx}" cy="${hy}" r="9"/><circle cx="${120+hx}" cy="${hy}" r="9"/></g>`}}
@@ -603,8 +624,8 @@ function poseCfg(pose,th,sy,sh,lean){
   if(pose==='atr'){const hy=sy+8-62*1.55;return {...def,thL:179,thR:179,as:1.55,body:`rotate(180 120 ${(hy+280)/2})`,extra:false}}
   return def;
 }
-function figSVG(f,sex,pose){
-  if(sex==='f')return figF(f,pose);
+function figSVG(f,sex,pose,ac){if(ac===undefined)ac=isAc();
+  if(sex==='f')return figF(f,pose,ac);
   const k=f/100,u=1-k,sy=122+u*8,o=u*7,lean=u*6,th=8+Math.pow(k,1.3)*142;
   const w=17+u*15,mouth=96+(k-.5)*16;
   const arm=`<path d="M-9 -1 C-14 10 -13 23 -7.5 32 C-8.5 41 -6 50 -4 57 L4 57 C6 49 8.5 41 7.5 32 C13 23 14 9 9 -1 C5 -6 -5 -6 -9 -1Z" fill="var(--skin)"/>
@@ -618,9 +639,9 @@ function figSVG(f,sex,pose){
   const hx=Math.max(22,w+2);
   const leg=P.sokol?`<path d="M98.6 268 L110.4 268 L110.6 278 C110.6 284 107.2 289.5 104.6 290.5 C102 289.5 98.4 284 98.4 278Z" fill="var(--leo)"/><path d="M98.6 281 C101 283 108 283 110.6 281" stroke="var(--leoD)" stroke-width="1" fill="none" opacity=".6"/>
    <path d="M${120-hx} 204 C${120-hx-3.5} 219 ${120-hx-4} 234 97.4 246 C95.6 255 96.2 264 98.4 272 L110.6 272 C112.6 264 113.8 256 112.3 248 C117.5 236 120.4 222 120.5 204Z" fill="#fff" stroke="#d6dbe5" stroke-width="1"/>
-   <path d="M100.5 221 Q103.5 234 105.5 244 M99.5 254 Q101 262 102.5 268" stroke="#dfe3ec" stroke-width="1.4" fill="none" stroke-linecap="round"/>`:`<path d="M93 208 C89 224 91 239 98 248 C94 257 95 267 99 275 L110 275 C112 267 114 257 111 250 C117 240 120 224 119 208Z" fill="var(--skin)"/>
-   <path d="M99 222 Q103 236 106 246 M99 254 Q101 262 103 268" stroke="var(--skinD)" stroke-width="1.6" fill="none" opacity=".55" stroke-linecap="round"/>
-   ${P.sokol?'':'<ellipse cx="104" cy="277" rx="9.5" ry="4.5" fill="#fff"/>'}`;
+   <path d="M100.5 221 Q103.5 234 105.5 244 M99.5 254 Q101 262 102.5 268" stroke="#dfe3ec" stroke-width="1.4" fill="none" stroke-linecap="round"/>`:`<path d="M93 208 C89 224 91 239 98 248 C94 257 95 267 99 275 L110 275 C112 267 114 257 111 250 C117 240 120 224 119 208Z" fill="${ac?'var(--leo)':'var(--skin)'}"/>
+   <path d="M99 222 Q103 236 106 246 M99 254 Q101 262 103 268" stroke="${ac?'var(--leoD)':'var(--skinD)'}" stroke-width="1.6" fill="none" opacity=".55" stroke-linecap="round"/>
+   ${P.sokol?'':`<ellipse cx="104" cy="277" rx="9.5" ry="4.5" fill="${ac?'var(--skin)':'#fff'}"/>`}`;
   const head=`<g transform="translate(0 ${o})">
    <ellipse cx="99.5" cy="78" rx="4" ry="6" fill="var(--skinD)"/><ellipse cx="140.5" cy="78" rx="4" ry="6" fill="var(--skinD)"/>
    <path d="M100 72 C100 51 140 51 140 72 C140 89 132 101 120 103 C108 101 100 89 100 72Z" fill="var(--skin)"/>
@@ -633,20 +654,20 @@ function figSVG(f,sex,pose){
     :'';
   return `${cosOn('phenix')?PHXDEF:''}${SCENE()}<ellipse cx="120" cy="288" rx="${74+u*12}" ry="8" fill="var(--line)"/>
   ${P.mat}${ITEM()}
-  <g id="fig-g">${P.under}<g transform="${P.body}">
+  ${P.back||''}<g id="fig-g"><g transform="${P.wrap||''}">${P.under}<g transform="${P.body}">
    <g transform="${P.legs}"><g transform="${P.legL}">${leg}</g><g transform="${P.legR} translate(240 0) scale(-1 1)">${leg}</g>
-   ${P.sokol?`<path d="M${120-w-1} 186 L${120+w+1} 186 C${120+w+1.5} 194 ${120+hx} 198 ${120+hx} 204 L${120+hx} 205.6 L${120-hx} 205.6 L${120-hx} 204 C${120-hx} 198 ${120-w-1.5} 194 ${120-w-1} 186Z" fill="#fff"/><path d="M${120-w-1} 186 C${120-w-1.5} 194 ${120-hx} 198 ${120-hx} 204 M${120+w+1} 186 C${120+w+1.5} 194 ${120+hx} 198 ${120+hx} 204" fill="none" stroke="#d6dbe5" stroke-width="1"/>`:`<path d="M${120-w-1} 186 L${120+w+1} 186 C${120+w+6} 198 ${148} 208 ${147} 215 L${123} 215 L120 205 L117 215 L93 215 C92 208 ${120-w-6} 198 ${120-w-1} 186Z" fill="#fff"/>`}</g>${P.hips}<g transform="${P.upper}">
+   ${P.sokol?`<path d="M${120-w-1} 186 L${120+w+1} 186 C${120+w+1.5} 194 ${120+hx} 198 ${120+hx} 204 L${120+hx} 205.6 L${120-hx} 205.6 L${120-hx} 204 C${120-hx} 198 ${120-w-1.5} 194 ${120-w-1} 186Z" fill="#fff"/><path d="M${120-w-1} 186 C${120-w-1.5} 194 ${120-hx} 198 ${120-hx} 204 M${120+w+1} 186 C${120+w+1.5} 194 ${120+hx} 198 ${120+hx} 204" fill="none" stroke="#d6dbe5" stroke-width="1"/>`:`<path d="M${120-w-1} 186 L${120+w+1} 186 C${120+w+6} 198 ${148} 208 ${147} 215 L${123} 215 L120 205 L117 215 L93 215 C92 208 ${120-w-6} 198 ${120-w-1} 186Z" fill="${ac?'var(--leo)':'#fff'}"/>`}</g>${ac?P.hips.replace(/fill="#fff"/g,'fill="var(--leo)"'):P.hips}<g transform="${P.upper}">
    <path d="M110 ${96+o} C109 ${sy-6} 100 ${sy-4} 86 ${sy+4} L154 ${sy+4} C140 ${sy-4} 131 ${sy-6} 130 ${96+o}Z" fill="var(--skin)"/>
    <path d="M89 ${sy+2} C84 ${sy+18} 90 ${sy+36} ${120-w} 172 C${120-w-3} 180 ${120-w-2} 186 ${120-w} 190 L${120+w} 190 C${120+w+2} 186 ${120+w+3} 180 ${120+w} 172 C150 ${sy+36} 156 ${sy+18} 151 ${sy+2} C140 ${sy+14} 100 ${sy+14} 89 ${sy+2}Z" fill="var(--leo)"/>
-   ${u>.3?`<ellipse cx="120" cy="${170+u*4}" rx="${w+1}" ry="${6+u*14}" fill="var(--leo)"/>`:''}${cosOn('sparkle')?SPK(100,40,sy+18,182-sy-18):''}${cosOn('phenix')?FLM(120,190,w):''}
+   ${u>.3?`<ellipse cx="120" cy="${170+u*4}" rx="${w+1}" ry="${6+u*14}" fill="var(--leo)"/>`:''}${cosOn('sparkle')?SPK(100,40,sy+18,182-sy-18):''}${ac?`<path d="M89 ${sy+5} L103 ${sy+3} L${120+w+1} ${178} L${120+w} 190 L${120+w-11} 190Z" fill="#fff" opacity=".92"/><path d="M93 ${sy+6} L${120+w-3} 188" stroke="var(--leo)" stroke-width="1.2" stroke-dasharray="1.5 4" stroke-linecap="round" opacity=".6"/>`:''}${cosOn('phenix')?FLM(120,190,w):''}
    <path d="M101 ${sy+22} Q110 ${sy+30} 119 ${sy+26} M121 ${sy+26} Q130 ${sy+30} 139 ${sy+22}" stroke="var(--leoD)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>
    ${k>.6?`<path d="M120 ${sy+32} V182 M112 ${sy+40} Q120 ${sy+43} 128 ${sy+40} M113 ${sy+52} Q120 ${sy+55} 127 ${sy+52} M114 ${sy+64} Q120 ${sy+66} 126 ${sy+64}" stroke="var(--leoD)" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".55"/>`:''}
    ${armL}${armR}${head}
    ${k>=.85?`<path d="M110.5 ${sy-13} L118.5 ${sy+23} M129.5 ${sy-13} L121.5 ${sy+23}" stroke="#2340d8" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="120" cy="${sy+30}" r="7.5" fill="#ffd34d" stroke="#e0a800" stroke-width="2"/>`:''}</g>
-  </g>${P.over}</g>${P.extra?extra:""}`;
+  </g>${P.over}</g>${P.front||''}</g>${P.extra?extra:""}`;
 }
 
-function figF(f,pose){
+function figF(f,pose,ac){if(ac===undefined)ac=isAc();
   const k=f/100,u=1-k,sy=124+u*8,o=u*7,lean=u*6,th=8+Math.pow(k,1.3)*142;
   const w=13+u*14,mouth=96+(k-.5)*16;
   const arm=`<path d="M-6 -1 C-8 10 -7.5 22 -5 32 C-5.2 41 -4 50 -3 57 L3 57 C4 50 5.2 41 5 32 C7.5 22 8 10 6 -1 C3.5 -5 -3.5 -5 -6 -1Z" fill="var(--skin)"/>
@@ -654,13 +675,14 @@ function figF(f,pose){
    <ellipse cx="0" cy="61" rx="4.3" ry="6" fill="var(--skin)"/>`;
   const P=poseCfg(pose,th,sy,22,lean);
   const armL=`<g transform="translate(${120-22} ${sy+8}) rotate(${P.thL}) scale(1 ${P.as})">${arm}</g>`;
-  const armR=P.hideR?'':`<g transform="translate(${120+22} ${sy+8}) rotate(${-P.thR}) scale(-1 ${P.as})">${arm}</g>`;
+  const armS=ac?arm.replace('fill="var(--skin)"','fill="var(--leo)"'):arm;
+  const armR=P.hideR?'':`<g transform="translate(${120+22} ${sy+8}) rotate(${-P.thR}) scale(-1 ${P.as})">${armS}</g>`;
   const leg=`<path d="M99 204 C96 220 97 235 101 247 C100 256 101 266 103 275 L109.5 275 C111 266 111.5 256 110.5 248 C113.5 236 116.5 220 117.5 204Z" fill="var(--skin)"/>
    <ellipse cx="105" cy="277" rx="8.5" ry="4" fill="var(--skin)"/>`;
   const head=`<g transform="translate(0 ${o})">
    <circle cx="120" cy="41" r="12" fill="var(--hair)"/>
    <path d="M101 72 C101 52 139 52 139 72 C139 88 131 99 120 101 C109 99 101 88 101 72Z" fill="var(--skin)"/>
-   <path d="M100.2 74 C99.3 45 140.7 45 139.8 74 C138.8 69 136.4 65.2 132.4 63 C125.6 59.8 114.4 59.8 107.6 63 C103.6 65.2 101.2 69 100.2 74Z" fill="var(--hair)"/><ellipse cx="120" cy="52" rx="8" ry="3" fill="var(--leo)"/>
+   <path d="M100.2 74 C99.3 45 140.7 45 139.8 74 C138.8 69 136.4 65.2 132.4 63 C125.6 59.8 114.4 59.8 107.6 63 C103.6 65.2 101.2 69 100.2 74Z" fill="var(--hair)"/><ellipse cx="120" cy="52" rx="8" ry="3" fill="var(--leo)"/>${ac?'<path d="M120 31 L107 24 L107 38Z M120 31 L133 24 L133 38Z" fill="var(--leo)"/><circle cx="120" cy="31" r="3.2" fill="var(--leoD)"/>':''}
    <path d="M107 ${k>.45?71:73} Q111 ${k>.45?69:71} 115 ${k>.45?70:72} M125 ${k>.45?70:72} Q129 ${k>.45?69:71} 133 ${k>.45?71:73}" stroke="var(--hair)" stroke-width="2" fill="none" stroke-linecap="round"/>
    ${k>.4?`<ellipse cx="111" cy="79" rx="2.7" ry="3.3" fill="var(--hair)"/><ellipse cx="129" cy="79" rx="2.7" ry="3.3" fill="var(--hair)"/><path d="M107.5 76.5l-2.5-2 M132.5 76.5l2.5-2" stroke="var(--hair)" stroke-width="1.6" stroke-linecap="round"/>`:`<path d="M107 80 Q111 82 115 80 M125 80 Q129 82 133 80" stroke="var(--hair)" stroke-width="2.2" fill="none" stroke-linecap="round"/>`}
    <ellipse cx="106" cy="88" rx="4" ry="2.4" fill="#ff8f86" opacity=".45"/><ellipse cx="134" cy="88" rx="4" ry="2.4" fill="#ff8f86" opacity=".45"/>
@@ -670,20 +692,20 @@ function figF(f,pose){
     :'';
   return `${cosOn('phenix')?PHXDEF:''}${SCENE()}<ellipse cx="120" cy="288" rx="${70+u*12}" ry="8" fill="var(--line)"/>
   ${P.mat}${ITEM()}
-  <g id="fig-g">${P.under}<g transform="${P.body}">
+  ${P.back||''}<g id="fig-g"><g transform="${P.wrap||''}">${P.under}<g transform="${P.body}">
    <g transform="${P.legs}"><g transform="${P.legL}">${leg}</g><g transform="${P.legR} translate(240 0) scale(-1 1)">${leg}</g></g>${P.hips}<g transform="${P.upper}">
    <path d="M113 ${96+o} C112.5 ${sy-6} 106 ${sy-2} 97 ${sy+4} L143 ${sy+4} C134 ${sy-2} 127.5 ${sy-6} 127 ${96+o}Z" fill="var(--skin)"/>
    <path d="M98 ${sy+2} C95 ${sy+18} 98 ${sy+36} ${120-w} 170 C${120-w-2} 182 ${120-w-7} 192 96 203 L120 216 L144 203 C${120+w+7} 192 ${120+w+2} 182 ${120+w} 170 C142 ${sy+36} 145 ${sy+18} 142 ${sy+2} C133 ${sy+13} 107 ${sy+13} 98 ${sy+2}Z" fill="var(--leo)"/>
    ${u>.3?`<ellipse cx="120" cy="${170+u*4}" rx="${w+1}" ry="${6+u*13}" fill="var(--leo)"/>`:''}${cosOn('sparkle')?SPK(105,30,sy+20,196-sy-20):''}${cosOn('phenix')?FLM(120,201,w-1):''}
-   <path d="M98 ${sy+8} Q108 ${sy+30} 120 ${sy+34} Q132 ${sy+30} 142 ${sy+8}" stroke="var(--leoD)" stroke-width="2" fill="none" opacity=".6"/>
-   <g fill="#fff" opacity=".9">${[0,1,2,3,4,5,6].map(i=>{const t=i/6,x=98+44*t,y=sy+8+Math.sin(t*Math.PI)*24;return `<circle cx="${x.toFixed(1)}" cy="${(y+2).toFixed(1)}" r="1.6"/>`}).join('')}</g>
+   ${ac?`<path d="M97 ${sy+5} L109 ${sy+3} L${120+w+5} 192 L${120+w+1} 200 L${120+w-8} 197Z" fill="#fff" opacity=".92"/><g fill="var(--leo)" opacity=".55">${[0,1,2,3,4].map(i=>{const t=(i+.5)/5;return `<circle cx="${(103+(w+13)*t).toFixed(1)}" cy="${(sy+5+(193-sy)*t).toFixed(1)}" r="1.4"/>`}).join('')}</g>`:`<path d="M98 ${sy+8} Q108 ${sy+30} 120 ${sy+34} Q132 ${sy+30} 142 ${sy+8}" stroke="var(--leoD)" stroke-width="2" fill="none" opacity=".6"/>
+   <g fill="#fff" opacity=".9">${[0,1,2,3,4,5,6].map(i=>{const t=i/6,x=98+44*t,y=sy+8+Math.sin(t*Math.PI)*24;return `<circle cx="${x.toFixed(1)}" cy="${(y+2).toFixed(1)}" r="1.6"/>`}).join('')}</g>`}
    ${armL}${armR}${head}
    ${k>=.85?`<path d="M113.5 ${sy-13} L119 ${sy+23} M126.5 ${sy-13} L121 ${sy+23}" stroke="#2340d8" stroke-width="2.6" stroke-linecap="round" fill="none"/><circle cx="120" cy="${sy+30}" r="7" fill="#ffd34d" stroke="#e0a800" stroke-width="2"/>`:''}</g>
-  </g>${P.over}</g>${P.extra?extra:""}`;
+  </g>${P.over}</g>${P.front||''}</g>${P.extra?extra:""}`;
 }
 const sexOf=()=>S.profile&&S.profile.sex==='f'?'f':'h';
-const curPose=()=>{const sx=sexOf(),p=S.pose||'salut';return posesFor(sx).some(x=>x[0]===p)?p:'salut'};
-function drawFig(f){$('fig').innerHTML=figSVG(f,sexOf(),curPose());$('posehint').hidden=!!S.pose}
+const curPose=()=>{const sx=sexOf(),ac=isAc(),d=ac?'salut_ac':'salut',p=(ac?S.poseAc:S.pose)||d;return posesFor(sx,ac).some(x=>x[0]===p)?p:d};
+function drawFig(f){$('fig').innerHTML=figSVG(f,sexOf(),curPose());$('posehint').hidden=!!(isAc()?S.poseAc:S.pose)}
 
 function tick(){
   const now=Date.now(),ms=now-lastEcart(now),d=Math.floor(ms/DAY);
@@ -775,8 +797,8 @@ function renderComps(force){
     let resH='';
     if(tot&&discOf(res)==='autre'){resH=`<div class="res"><div class="tot"><b>${fmtS(tot.s)}</b><span>${esc(res.unit||'score')}</span>${res.rank?`<span class="rank">${res.rank}${res.rank==1?(G('er','re')):'e'}${res.of?' / '+res.of:''}</span>`:''}</div>${res.note?`<p>${esc(res.note)}</p>`:''}</div>`}
     else if(tot){const AP=appsOf(res);let best=null,bv=-1;AP.forEach(a=>{const f=finalOf(res.app[a.k]);if(f!=null&&f>bv){bv=f;best=a.k}});
-      resH=`<div class="res"><div class="tot"><b>${fmt(tot.s)}</b><span>total sur ${tot.n} agrès · ${discOf(res).toUpperCase()}</span>${res.rank?`<span class="rank">${res.rank}${res.rank==1?G('er','re'):'e'}${res.of?' / '+res.of:''}</span>`:''}</div>
-      <div class="appl">${AP.filter(a=>finalOf(res.app[a.k])!=null).map(a=>`<span class="ap${tot.n>1&&a.k===best?' best':''}">${a.n} <b>${fmt(finalOf(res.app[a.k]))}</b></span>`).join('')}</div>${res.note?`<p>${esc(res.note)}</p>`:''}</div>`}
+      const isG=discOf(res)==='gac';resH=`<div class="res"><div class="tot"><b>${fmt(tot.s)}</b><span>${isG?`${res.lvl==='fed'?'GAc · Fédéral':`total sur ${tot.n} exercice${tot.n>1?'s':''} · GAc`}${res.cat&&GACCAT[res.cat]?' · '+GACCAT[res.cat]:''}`:`total sur ${tot.n} agrès · ${discOf(res).toUpperCase()}`}</span>${res.rank?`<span class="rank">${res.rank}${res.rank==1?G('er','re'):'e'}${res.of?' / '+res.of:''}</span>`:''}</div>
+      <div class="appl">${isG&&res.lvl==='fed'?(()=>{const x=res.app.passage||{};return [['D',x.d],['A',x.art],['E',x.e],['Pén.',x.p||null]].filter(([,v])=>v!=null).map(([n,v])=>`<span class="ap">${n} <b>${fmtS(v)}</b></span>`).join('')})():AP.filter(a=>finalOf(res.app[a.k])!=null).map(a=>`<span class="ap${tot.n>1&&a.k===best?' best':''}">${a.n} <b>${fmt(finalOf(res.app[a.k]))}</b></span>`).join('')}</div>${isG&&res.part?`<p>Avec ${esc(res.part)}</p>`:''}${res.note?`<p>${esc(res.note)}</p>`:''}</div>`}
     const prep=past?`<span class="prep">Préparation (3 semaines avant) : ${count(isE,c.t-21*DAY,c.t)} écart(s), ${count(isR,c.t-21*DAY,c.t)} envie(s) surmontée(s).</span>`:'';
     return `<li class="${past?'past':''}${isN?' next':''}"><div class="ch"><div><b>${esc(c.name)}</b><span>${new Date(c.t).toLocaleString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}</span></div><em>${past?'Passée':isN?'Prochaine · J-'+Math.ceil(r/DAY):'J-'+Math.ceil(r/DAY)}</em></div>
       ${resH}${prep}
@@ -791,6 +813,13 @@ function resForm(c){const r=c.result||{app:{}},v=x=>x==null?'':String(x).replace
   if(disc==='autre')return `<form class="resf" data-id="${esc(c.id)}" data-disc="autre"><strong>Résultat : ${esc(c.name)}</strong>
   <div class="row"><label>Note, score ou temps<br><input name="score" inputmode="decimal" value="${v(r.score)}" style="width:9em"></label><label>Unité (facultatif)<br><input name="unit" maxlength="20" value="${esc(r.unit||'')}" placeholder="points, s…" style="width:9em"></label></div>
   ${foot}${btns}</form>`;
+  if(disc==='gac'){const cat=r.cat||(S.profile&&S.profile.gacCat)||'2Mx',lvl=r.lvl||(c.result&&c.result.app?'perf':(S.profile&&S.profile.gacLvl)||'fed');
+  return `<form class="resf" data-id="${esc(c.id)}" data-disc="gac"><strong>Résultat : ${esc(c.name)} · Gym acrobatique</strong>
+  <div class="row"><label>Catégorie<br><select name="cat">${Object.entries(GACCAT).map(([k,n])=>`<option value="${k}" ${k===cat?'selected':''}>${n}</option>`).join('')}</select></label><label>Niveau<br><select name="lvl">${Object.entries(GACLVL).map(([k,n])=>`<option value="${k}" ${k===lvl?'selected':''}>${n}</option>`).join('')}</select></label><label>Partenaire(s) (facultatif)<br><input name="part" maxlength="60" value="${esc(r.part||'')}" placeholder="Prénoms"></label></div>
+  <div class="scroll"><table class="rt rtac"><thead><tr><th>Exercice</th><th>D</th><th>A</th><th>E</th><th>Pén.</th><th>Note</th></tr></thead><tbody>${acRows(lvl,r)}</tbody><tfoot><tr><td colspan="5">Total</td><td class="fn" id="rt-tot">–</td></tr></tfoot></table></div>
+  ${foot}
+  <small>Note = D + A + E × 2 − pénalités. E et A sont sur 10, D est ta note de difficulté. Laisse vides les exercices non passés, et D ou A si ta catégorie n’en a pas.</small>
+  ${btns}</form>`}
   return `<form class="resf" data-id="${esc(c.id)}" data-disc="${disc}"><strong>Résultat : ${esc(c.name)} · ${disc.toUpperCase()}</strong>
   <div class="scroll"><table class="rt"><thead><tr><th>Agrès</th><th>D</th><th>Fautes</th><th>Pén.</th><th>E</th><th>Note</th></tr></thead><tbody>
   ${APPS[disc].map(a=>{const x=(r.app&&r.app[a.k])||{};return `<tr data-a="${a.k}"><td>${a.n}</td><td><input name="d" inputmode="decimal" value="${v(x.d)}" aria-label="${a.n}, note D" placeholder="–"></td><td><input name="f" inputmode="decimal" value="${v(x.f!=null?x.f:x.e!=null?Math.round((10-x.e)*1000)/1000:null)}" aria-label="${a.n}, points de faute en exécution" placeholder="–"></td><td><input name="p" inputmode="decimal" value="${v(x.p||null)}" aria-label="${a.n}, pénalités" placeholder="0"></td><td class="ex">–</td><td class="fn"><b>–</b><small class="exm"></small></td></tr>`}).join('')}
@@ -798,39 +827,54 @@ function resForm(c){const r=c.result||{app:{}},v=x=>x==null?'':String(x).replace
   ${foot}
   <small>Saisis tes points de faute : E = 10 − fautes, puis note = D + E − pénalités. Laisse vides les agrès que tu n'as pas passés.</small>
   ${btns}</form>`}
-function readForm(f){const app={};let bad=false;
+function acRows(lvl,r){const v=x=>x==null?'':String(x).replace('.',',');return (lvl==='fed'?GACF:APPS.gac).map(a=>{const x=(r&&r.app&&r.app[a.k])||{};return `<tr data-a="${a.k}"><td>${a.n}</td><td><input name="d" inputmode="decimal" value="${v(x.d)}" aria-label="${a.n}, difficulté" placeholder="–"></td><td><input name="art" inputmode="decimal" value="${v(x.art)}" aria-label="${a.n}, note artistique sur 10" placeholder="–"></td><td><input name="e" inputmode="decimal" value="${v(x.e)}" aria-label="${a.n}, exécution sur 10" placeholder="–"></td><td><input name="p" inputmode="decimal" value="${v(x.p||null)}" aria-label="${a.n}, pénalités" placeholder="0"></td><td class="fn"><b>–</b><small class="exm"></small></td></tr>`}).join('')}
+function readFormAc(f){const app={};let bad=false;
+  f.querySelectorAll('tr[data-a]').forEach(tr=>{const g=n=>tr.querySelector(`input[name=${n}]`),d=num(g('d').value),art=num(g('art').value),e=num(g('e').value),p=num(g('p').value);
+    const any=d!=null||art!=null||e!=null,eb=(e!=null&&(e<0||e>10))||(any&&e==null),ab=art!=null&&(art<0||art>10),db=d!=null&&d<0,pb=p!=null&&p<0;
+    g('e').classList.toggle('bad',eb);g('art').classList.toggle('bad',ab);g('d').classList.toggle('bad',db);g('p').classList.toggle('bad',pb);if(eb||ab||db||pb)bad=true;
+    const a={d,art,e,p:p||0};if(any)app[tr.dataset.a]=a;
+    tr.querySelector('.exm').textContent=e!=null&&!eb?'E×2 '+fmt(2*e):'';tr.querySelector('.fn b').textContent=any&&!eb&&!ab&&!db?fmt(finalOf(a)):'–'});
+  return {app,bad}}
+function readForm(f){if(f.dataset.disc==='gac')return readFormAc(f);const app={};let bad=false;
   f.querySelectorAll('tr[data-a]').forEach(tr=>{const g=n=>tr.querySelector(`input[name=${n}]`),d=num(g('d').value),fa=num(g('f').value),p=num(g('p').value);
     const any=d!=null||fa!=null,fb=(fa!=null&&(fa<0||fa>10))||(any&&fa==null),db=(d!=null&&d<0)||(any&&d==null),pb=p!=null&&p<0;
     g('f').classList.toggle('bad',fb);g('d').classList.toggle('bad',db);g('p').classList.toggle('bad',pb);if(fb||db||pb)bad=true;
     const a={d,f:fa,p:p||0};if(any)app[tr.dataset.a]=a;
     const ex=fa!=null&&!fb?fmt(execOf(a)):'–';tr.querySelector('.ex').textContent=ex;tr.querySelector('.exm').textContent=ex==='–'?'':'E '+ex;tr.querySelector('.fn b').textContent=any&&!fb&&!db?fmt(finalOf(a)):'–'});
   return {app,bad}}
-function calcForm(){const f=$('comps').querySelector('.resf');if(!f||f.dataset.disc==='autre')return;const {app}=readForm(f),t=totalOf({disc:f.dataset.disc,app});$('rt-tot').textContent=t?fmt(t.s):'–'}
+function calcForm(){const f=$('comps').querySelector('.resf');if(!f||f.dataset.disc==='autre')return;const {app}=readForm(f),t=totalOf({disc:f.dataset.disc,app,lvl:f.lvl?f.lvl.value:undefined});$('rt-tot').textContent=t?fmt(t.s):'–'}
 $('comps').addEventListener('input',e=>{if(e.target.closest('.resf'))calcForm()});
+$('comps').addEventListener('change',e=>{if(e.target.name!=='lvl')return;const f=e.target.closest('.resf');if(!f)return;const nv=e.target.value,pv=nv==='fed'?'perf':'fed';f._st=f._st||{};f._st[pv]=readFormAc(f).app;f.querySelector('tbody').innerHTML=acRows(nv,{app:f._st[nv]||{}});calcForm()});
 $('comps').addEventListener('submit',e=>{const f=e.target.closest('.resf');if(!f)return;e.preventDefault();
   const c=S.comps.find(x=>x.id===f.dataset.id);if(!c)return;const rank=parseInt(f.rank.value,10),of=parseInt(f.of.value,10),disc=f.dataset.disc;
   const base={disc,rank:rank>0?rank:null,of:of>0?of:null,note:f.note.value.trim().slice(0,160)};
   if(disc==='autre'){const sc=num(f.score.value);if(sc==null){f.score.classList.add('bad');toast('Indique ta note, ton score ou ton temps.',false);return}
     c.result={...base,score:sc,unit:f.unit.value.trim().slice(0,20)}}
-  else{const {app,bad}=readForm(f);if(bad){toast('Vérifie les cases en rouge : remplis D et fautes, fautes entre 0 et 10.',false);return}
-    c.result={...base,app}}
+  else{const {app,bad}=readForm(f);if(bad){toast(disc==='gac'?'Vérifie les cases en rouge : E obligatoire, E et A entre 0 et 10.':'Vérifie les cases en rouge : remplis D et fautes, fautes entre 0 et 10.',false);return}
+    c.result={...base,app};if(disc==='gac'){c.result.cat=GACCAT[f.cat.value]?f.cat.value:'2Mx';c.result.part=f.part.value.trim().slice(0,60);c.result.lvl=f.lvl.value==='perf'?'perf':'fed';evoLvl=c.result.lvl;evoSel='total';if(c.result.lvl==='fed'){const ps=c.result.app.passage;c.result.app=ps?{passage:ps}:{}}else delete c.result.app.passage;S.profile={...(S.profile||{}),gacLvl:c.result.lvl}}}
   const winNow=base.rank===1&&!(S.owned&&S.owned.sacre);if(winNow){S.owned={...(S.owned||{}),sacre:Date.now()};S.equip={...(S.equip||{}),bg:'sacre'}}editC=null;save();renderComps(true);if(winNow){celebrate();figAnim('jump');toast('Surprise ! Ta victoire a débloqué un décor secret : le Podium d’or.',false)}else toast('Résultat enregistré.',false)});
-let evoMet='final';
-const metOf=(a,m)=>{if(!a||finalOf(a)==null)return null;return m==='d'?a.d:m==='e'?execOf(a):finalOf(a)};
-function evoVal(c){if(!c.result)return null;const r=c.result;
+let evoMet='final',evoLvl=null,evoLvlOn=false;
+const lvlOf=r=>r.lvl==='fed'?'fed':'perf';
+const metOf=(a,m)=>{if(!a||finalOf(a)==null)return null;return m==='d'?a.d:m==='e'?execOf(a):m==='a'?(a.art==null?null:a.art):finalOf(a)};
+function evoVal(c){if(!c.result)return null;const r=c.result;if(evoLvlOn&&discOf(r)==='gac'&&lvlOf(r)!==evoLvl)return null;
   if(discOf(r)==='autre'){if(evoSel!=='total'||evoMet!=='final')return null;const t=totalOf(r);return t?t.s:null}
   if(evoSel==='total'){let s=0,n=0;for(const a of appsOf(r)){const v=metOf(r.app[a.k],evoMet);if(v!=null){s+=v;n++}}return n?Math.round(s*1000)/1000:null}
   return metOf(r.app&&r.app[evoSel],evoMet)}
 const evs=$('evo');
 function drawEvo(){
-  const withRes=S.comps.filter(c=>c.result&&totalOf(c.result)).sort((a,b)=>a.t-b.t);
-  $('evo-p').hidden=!withRes.length;if(!withRes.length)return;
-  const keys=[...new Set([...APPS[curDisc()]||[],...APPS.gam,...APPS.gaf].map(a=>a.k))];
+  const all=S.comps.filter(c=>c.result&&totalOf(c.result)).sort((a,b)=>a.t-b.t);
+  $('evo-p').hidden=!all.length;if(!all.length)return;
+  const acR=all.filter(c=>discOf(c.result)==='gac'),lv=[...new Set(acR.map(c=>lvlOf(c.result)))];evoLvlOn=lv.length>1;
+  if(!lv.includes(evoLvl))evoLvl=acR.length?lvlOf(acR[acR.length-1].result):null;
+  $('evo-l').hidden=$('evo-ll').hidden=!evoLvlOn;if(evoLvlOn)$('evo-l').innerHTML=[['fed','Fédéral'],['perf','Performance / Élite']].map(([k,n])=>`<label><input type="radio" name="evol" value="${k}" ${k===evoLvl?'checked':''}>${n}</label>`).join('');
+  const withRes=all.filter(c=>!evoLvlOn||discOf(c.result)!=='gac'||lvlOf(c.result)===evoLvl);
+  const keys=[...new Set([...APPS[curDisc()]||[],...APPS.gam,...APPS.gaf,...GACF,...APPS.gac].map(a=>a.k))];
+  const anyAc=withRes.some(c=>discOf(c.result)==='gac'),allAc=withRes.every(c=>discOf(c.result)==='gac'||discOf(c.result)==='autre');$('evo-cl').textContent=allAc&&anyAc?'Exercice':anyAc?'Agrès / exercice':'Agrès';
   const avail=['total',...keys.filter(k=>withRes.some(c=>discOf(c.result)!=='autre'&&finalOf(c.result.app[k])!=null))];
   const onlyOther=withRes.every(c=>discOf(c.result)==='autre'),F=onlyOther?fmtS:fmt;
   if(!avail.includes(evoSel))evoSel=avail.includes('anneaux')?'anneaux':'total';
-  if(onlyOther)evoMet='final';$('evo-m').hidden=onlyOther;$('evo-ml').hidden=onlyOther;
-  $('evo-m').innerHTML=[['final','Note finale'],['d','Difficulté (D)'],['e','Exécution (E)']].map(([k,n])=>`<label><input type="radio" name="evom" value="${k}" ${k===evoMet?'checked':''}>${n}</label>`).join('');
+  if(onlyOther||(evoMet==='a'&&!anyAc))evoMet='final';$('evo-m').hidden=onlyOther;$('evo-ml').hidden=onlyOther;
+  $('evo-m').innerHTML=[['final','Note finale'],['d','Difficulté (D)'],...(anyAc?[['a','Artistique (A)']]:[]),['e','Exécution (E)']].map(([k,n])=>`<label><input type="radio" name="evom" value="${k}" ${k===evoMet?'checked':''}>${n}</label>`).join('');
   $('evo-ch').innerHTML=avail.map(k=>`<label><input type="radio" name="evo" value="${k}" ${k===evoSel?'checked':''}>${k==='total'?(onlyOther?'Score':'Total'):appName(k)}</label>`).join('');
   const W=evs.clientWidth,H=evs.clientHeight;if(!W||!H)return;
   const pts=withRes.map(c=>({c,v:evoVal(c)})).filter(p=>p.v!=null);
@@ -847,6 +891,7 @@ function drawEvo(){
 const roE=new ResizeObserver(drawEvo);roE.observe(evs);
 $('evo-ch').addEventListener('change',e=>{evoSel=e.target.value;drawEvo()});
 $('evo-m').addEventListener('change',e=>{evoMet=e.target.value;drawEvo()});
+$('evo-l').addEventListener('change',e=>{evoLvl=e.target.value;evoSel='total';drawEvo()});
 const ws=$('weeks');
 function drawWeeks(){
   const W=ws.clientWidth,H=ws.clientHeight;if(!W||!H)return;
@@ -1025,7 +1070,7 @@ let taps=0,tapT=0;
 $('figbtn').addEventListener('click',()=>{taps++;clearTimeout(tapT);if(taps>=10){taps=0;doSalto();return}tapT=setTimeout(()=>{if(taps<=2)openPoses();taps=0},320)});
 function doSalto(){const f=$('fig');f.classList.remove('jump','sad','salto');void f.getBoundingClientRect();f.classList.add('salto');setTimeout(()=>f.classList.remove('salto'),1300);
   if(!(S.badges&&S.badges.x_salto)){S.badges={...(S.badges||{}),x_salto:Date.now()};persist();setTimeout(()=>{celebrate();toast('Secret découvert : le salto ! Il en reste d’autres…',false)},900)}}
-$('pgrid').addEventListener('click',e=>{const b=e.target.closest('[data-pose]');if(!b)return;S.pose=b.dataset.pose;$('poses').hidden=true;save();$('figbtn').focus()});
+$('pgrid').addEventListener('click',e=>{const b=e.target.closest('[data-pose]');if(!b)return;if(isAc())S.poseAc=b.dataset.pose;else S.pose=b.dataset.pose;$('poses').hidden=true;save();$('figbtn').focus()});
 $('poses-x').addEventListener('click',()=>{$('poses').hidden=true});
 $('poses').addEventListener('click',e=>{if(e.target.id==='poses')$('poses').hidden=true});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('poses').hidden)$('poses').hidden=true});
@@ -1067,7 +1112,7 @@ function renderSleep(){const ds=Object.entries(S.days||{});const grp=[['Nuit dif
   const bad=rows[0].v,good=rows[2].v;$('ins-s').textContent=bad!=null&&good!=null?(bad>good?`Tu fais plus d'écarts après une nuit difficile (${bad.toLocaleString('fr-FR',{maximumFractionDigits:1})} contre ${good.toLocaleString('fr-FR',{maximumFractionDigits:1})} par jour). Le sommeil compte !`:'Pas de lien net entre ton sommeil et tes écarts pour l’instant.'):'Il faut des nuits difficiles et des bonnes nuits pour comparer.'}
 // mode dernière semaine
 function prepItems(){const d=curDisc(),base=[['sac','Sac prêt la veille'],['repas',"Repas de la veille prévu (rien de nouveau)"],['eau',"Gourde et collations pour la compét'"],['dodo','Coucher tôt la veille'],['lic','Licence et convocation']];
-  const gear=d==='gam'?[['man','Maniques (anneaux, barre fixe, barres)'],['tenue','Léotard, short et sokol'],['bandes','Bandes / strap'],['mag','Magnésie']]:d==='gaf'?[['man','Maniques (barres asymétriques)'],['tenue','Justaucorps de compétition'],['chev','Élastiques, barrettes, laque'],['bandes','Bandes / strap'],['mag','Magnésie']]:[['tenue','Tenue de compétition']];
+  const gear=d==='gam'?[['man','Maniques (anneaux, barre fixe, barres)'],['tenue','Léotard, short et sokol'],['bandes','Bandes / strap'],['mag','Magnésie']]:d==='gaf'?[['man','Maniques (barres asymétriques)'],['tenue','Justaucorps de compétition'],['chev','Élastiques, barrettes, laque'],['bandes','Bandes / strap'],['mag','Magnésie']]:d==='gac'?[['tenue','Tenue coordonnée avec tes partenaires'],['fiche','Fiches de difficulté (tariff sheets)'],['musique','Musiques des exercices (clé USB + secours)'],['bandes','Bandes / strap poignets'],['mag','Magnésie'],['chev','Cheveux, maquillage et laque prêts']]:[['tenue','Tenue de compétition']];
   return [...gear,...base]}
 function renderPrep(){const now=Date.now(),nc=nextC(now),on=nc&&nc.t-now<=7*DAY;$('prep').hidden=!on;if(!on)return;
   const p=S.prep[nc.id]||{done:{},custom:[]},items=[...prepItems(),...(p.custom||[]).map((t,i)=>['c'+i,t,true])],n=items.filter(([k])=>p.done&&p.done[k]).length;
@@ -1225,18 +1270,27 @@ let obSex=null,obSport=null;
 function checkOnb(){if(S.profile){$('onb').hidden=true;return}if(!$('onb').hidden)return;
   $('pv-h').innerHTML=figSVG(100,'h').replace(' id="fig-g"','');$('pv-f').innerHTML=figSVG(100,'f').replace(' id="fig-g"','');
   $('ob1').hidden=false;$('ob2').hidden=true;$('onb').hidden=false;setTimeout(()=>{const h=$('ob-h');if(h)h.focus({preventScroll:true})},50)}
-function obPick(sp){obSport=sp;document.querySelectorAll('[data-sport]').forEach(b=>b.classList.toggle('on',b.dataset.sport===sp));$('ob-other').hidden=sp!=='autre';$('ob-go').disabled=!sp}
+function obRoles(){const cat=$('ob-gcat').value,cur=$('ob-grole').value,r=rolesFor(cat),def=obSex==='f'?'voltigeur':'porteur';$('ob-grole').innerHTML=r.map(k=>`<option value="${k}" ${k===(r.includes(cur)?cur:def)?'selected':''}>${roleName(k,obSex)}</option>`).join('')}
+function obPick(sp){obSport=sp;document.querySelectorAll('[data-sport]').forEach(b=>b.classList.toggle('on',b.dataset.sport===sp));$('ob-other').hidden=sp!=='autre';
+  $('ob-gac').hidden=sp!=='gac';if(sp==='gac'){if(!$('ob-gcat').options.length)$('ob-gcat').innerHTML=Object.entries(GACCAT).map(([k,n])=>`<option value="${k}" ${k==='2Mx'?'selected':''}>${n}</option>`).join('');obRoles()}
+  $('ob-go').disabled=!sp}
+$('ob-gcat').addEventListener('change',obRoles);
 $('onb').addEventListener('click',e=>{const sx=e.target.closest('[data-sex]'),sp=e.target.closest('[data-sport]');
   if(sx){obSex=sx.dataset.sex;$('ob1').hidden=true;$('ob2').hidden=false;obPick(obSex==='f'?'gaf':'gam');$('ob-go').focus()}
   if(sp){obPick(sp.dataset.sport);if(obSport==='autre')$('ob-sname').focus()}});
 $('ob-back').addEventListener('click',()=>{$('ob2').hidden=true;$('ob1').hidden=false});
-$('ob-go').addEventListener('click',()=>{if(!obSex||!obSport)return;S.profile={sex:obSex,sport:obSport,sportName:obSport==='autre'?$('ob-sname').value.trim().slice(0,40):'',name:$('ob-name').value.trim().slice(0,24)};
+$('ob-go').addEventListener('click',()=>{if(!obSex||!obSport)return;S.profile={sex:obSex,sport:obSport,sportName:obSport==='autre'?$('ob-sname').value.trim().slice(0,40):'',name:$('ob-name').value.trim().slice(0,24)};if(obSport==='gac'){S.profile.gacCat=$('ob-gcat').value;S.profile.gacRole=$('ob-grole').value}
   $('onb').hidden=true;save();afterTour=()=>{greetReturn();setTimeout(checkRecord,1500)};location.hash='aujourdhui';setTimeout(startTour,250)});
 function syncProfileUI(){const p=S.profile||{sex:'h',sport:'gam',sportName:''};if(document.activeElement!==$('s-sex'))$('s-sex').value=p.sex;if(document.activeElement!==$('s-sport'))$('s-sport').value=p.sport;
+  const ac=p.sport==='gac';$('s-gcat-w').hidden=!ac;$('s-grole-w').hidden=!ac;
+  if(ac){const cat=GACCAT[p.gacCat]?p.gacCat:'2Mx';$('s-gcat').innerHTML=Object.entries(GACCAT).map(([k,n])=>`<option value="${k}" ${k===cat?'selected':''}>${n}</option>`).join('');
+    const roles=rolesFor(cat),rl=roles.includes(p.gacRole)?p.gacRole:roles[0];$('s-grole').innerHTML=roles.map(k=>`<option value="${k}" ${k===rl?'selected':''}>${roleName(k,p.sex)}</option>`).join('')}
   $('s-sname-w').hidden=p.sport!=='autre';if(document.activeElement!==$('s-sname'))$('s-sname').value=p.sportName||'';if(document.activeElement!==$('s-name'))$('s-name').value=p.name||''}
 function setProfile(ch){S.profile={...(S.profile||{sex:'h',sport:'gam',sportName:''}),...ch};save()}
 $('s-sex').addEventListener('change',e=>setProfile({sex:e.target.value}));
-$('s-sport').addEventListener('change',e=>{setProfile({sport:e.target.value});evoSel=null});
+$('s-sport').addEventListener('change',e=>{const v=e.target.value,p=S.profile||{};const ch={sport:v};if(v==='gac'&&!GACCAT[p.gacCat]){ch.gacCat='2Mx';ch.gacRole=p.sex==='f'?'voltigeur':'porteur'}setProfile(ch);evoSel=null});
+$('s-gcat').addEventListener('change',e=>{const cat=e.target.value,r=rolesFor(cat);setProfile({gacCat:cat,gacRole:r.includes(acRole())?acRole():r[0]})});
+$('s-grole').addEventListener('change',e=>setProfile({gacRole:e.target.value}));
 $('s-sname').addEventListener('change',e=>setProfile({sportName:e.target.value.trim().slice(0,40)}));
 $('s-name').addEventListener('change',e=>setProfile({name:e.target.value.trim().slice(0,24)}));
 checkBadges(true);render();tick();setInterval(tick,1000);
