@@ -262,7 +262,7 @@ select{font:16px Barlow;min-height:44px;padding:0 10px;border-radius:10px;border
 .tabs{width:100%;display:flex;gap:6px;flex-wrap:wrap}
 .tabs a{color:#fff;text-decoration:none;font-weight:600;padding:0 18px;border-radius:999px;background:rgba(255,255,255,.14);min-height:44px;display:flex;align-items:center}
 .tabs a.on{background:#fff;color:var(--blue)}
-.tab{display:none}.tab.on{display:block}.tab>section:first-child{margin-top:0!important}
+.tab{display:none}main{overflow-x:clip}.tab.on{display:block}.tab>section:first-child{margin-top:0!important}
 body:not([data-tab=aujourdhui]) .top{padding-bottom:clamp(22px,4vw,40px)}
 body:not([data-tab=aujourdhui]) main.band{padding-top:clamp(24px,4vw,40px)!important}
 .hrow{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;margin-bottom:16px}.hrow h2{margin:0}
@@ -893,13 +893,27 @@ const TABS=['aujourdhui','recap','competitions','journal','reglages'];
 function showTab(){let t=location.hash.slice(1);if(!TABS.includes(t))t='aujourdhui';document.body.dataset.tab=t;
   TABS.forEach(n=>$('t-'+n).classList.toggle('on',n===t));document.querySelectorAll('#tabs a').forEach(a=>{a.classList.toggle('on',a.dataset.t===t);a.toggleAttribute('aria-current',a.dataset.t===t)})}
 window.addEventListener('hashchange',()=>{showTab();window.scrollTo(0,0)});showTab();
-{let sx=0,sy=0,st=0,ok=false;const main=document.querySelector('main');
- const blocked=el=>el.closest('input,textarea,select,.scroll,.fig,.chips,.sgrid,.modal,.sheet,#tabs,.rt')||!!document.querySelector('.modal:not([hidden])');
- main.addEventListener('touchstart',e=>{if(e.touches.length!==1||tourI>=0){ok=false;return}const t=e.touches[0];sx=t.clientX;sy=t.clientY;st=Date.now();ok=!blocked(e.target)},{passive:true});
- main.addEventListener('touchend',e=>{if(!ok)return;ok=false;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
-   if(Date.now()-st>700||Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.8)return;
-   const cur=TABS.indexOf(document.body.dataset.tab),nx=cur+(dx<0?1:-1);if(nx<0||nx>=TABS.length)return;
-   document.body.dataset.swipe=dx<0?'l':'r';location.hash=TABS[nx];setTimeout(()=>{delete document.body.dataset.swipe},350)},{passive:true});}
+{let sx=0,sy=0,dx=0,mode=-1,el=null,W=1,lx=0,lt=0,vx=0,busy=false;const main=document.querySelector('main');
+ const RM=matchMedia('(prefers-reduced-motion: reduce)'),EZ='cubic-bezier(.22,.8,.24,1)';
+ const blocked=el=>!(el===document.documentElement||el===document.body||main.contains(el))||!!el.closest('input,textarea,select,.scroll,.fig,.chips,.sgrid,.modal,.sheet,#tabs,.rt,.onb')||!!document.querySelector('.modal:not([hidden])')||!$('onb').hidden;
+ const cur=()=>TABS.indexOf(document.body.dataset.tab);
+ const setX=(e,x,ms)=>{e.style.transition=ms?`transform ${ms}ms ${EZ},opacity ${ms}ms ${EZ}`:'none';e.style.transform=x?`translate3d(${x}px,0,0)`:'';e.style.opacity=x?String(1-Math.min(.4,Math.abs(x)/W*.55)):''};
+ const clear=e=>{e.style.transition='';e.style.transform='';e.style.opacity='';e.style.willChange=''};
+ document.addEventListener('touchstart',e=>{mode=-1;if(busy||e.touches.length!==1||tourI>=0||blocked(e.target))return;const t=e.touches[0];
+   sx=lx=t.clientX;sy=t.clientY;lt=Date.now();vx=0;dx=0;el=$('t-'+document.body.dataset.tab);W=main.clientWidth||innerWidth;if(el)mode=0},{passive:true});
+ document.addEventListener('touchmove',e=>{if(mode<0)return;const t=e.touches[0],mx=t.clientX-sx,my=t.clientY-sy;
+   if(mode===0){if(Math.abs(mx)<8&&Math.abs(my)<8)return;if(Math.abs(mx)>Math.abs(my)*1.2){mode=1;el.style.willChange='transform'}else{mode=-1;return}}
+   if(e.cancelable)e.preventDefault();const now=Date.now();vx=vx*.4+.6*(t.clientX-lx)/Math.max(1,now-lt);lx=t.clientX;lt=now;
+   const i=cur(),edge=(mx>0&&i<=0)||(mx<0&&i>=TABS.length-1);dx=edge?mx*.22:mx;if(!RM.matches)setX(el,dx,0)},{passive:false});
+ const end=()=>{if(mode!==1){mode=-1;return}mode=-1;const old=el,i=cur(),dir=dx<0?1:-1,nx=i+dir;
+   const go=nx>=0&&nx<TABS.length&&(Math.abs(dx)>W*.22||(Math.abs(vx)>.3&&Math.abs(dx)>20&&Math.sign(vx)===Math.sign(dx)));
+   if(!go){if(RM.matches)return clear(old);setX(old,0,240);setTimeout(()=>clear(old),260);return}
+   if(RM.matches){clear(old);location.hash=TABS[nx];return}
+   busy=true;const ms=Math.max(110,Math.min(200,(W-Math.abs(dx))/Math.max(.9,Math.abs(vx)*1.6)));setX(old,-dir*W,ms);
+   setTimeout(()=>{clear(old);location.hash=TABS[nx];showTab();window.scrollTo(0,0);
+     const ne=$('t-'+TABS[nx]);ne.style.willChange='transform';ne.style.transition='none';ne.style.transform=`translate3d(${dir*W*.3}px,0,0)`;ne.style.opacity='.35';ne.offsetWidth;
+     ne.style.transition=`transform 260ms ${EZ},opacity 220ms ${EZ}`;ne.style.transform='';ne.style.opacity='';setTimeout(()=>{clear(ne);busy=false},280)},ms)};
+ document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true});}
 // share card
 const CARDC={'--line':'rgba(255,255,255,.18)','--blue':'rgba(0,0,0,.28)','--skin':'#ecbb92','--skinD':'#b97a52','--skinL':'#fff3e6','--hair':'#2a1d16','--red':'#ff4b3e','--redD':'#b8261d'};
 let cardBlob=null,cardURL='';
