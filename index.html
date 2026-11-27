@@ -204,7 +204,24 @@ body[data-swipe=l] .tab.on{animation:swl .28s ease-out}body[data-swipe=r] .tab.o
 .tged{display:grid;grid-template-columns:minmax(0,1fr) 7.5em;gap:8px 12px;align-items:center;text-align:left}.tged input{width:100%}
 .dbf{border:1px solid var(--line);border-radius:12px;padding:8px 12px 12px;margin:10px 0;display:grid;gap:8px;text-align:left}.dbf legend{font-weight:700;padding:0 4px}.dbf label{display:grid;gap:4px;font-size:14px;font-weight:600}.dbf textarea{font:inherit;font-weight:400;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card);color:var(--ink);resize:vertical;min-height:2.6em}
 .dbk{display:grid;gap:6px;margin-top:8px}.dbk div{border-left:4px solid var(--c);background:var(--tint);border-radius:0 10px 10px 0;padding:6px 10px}.dbk small{display:block;font:700 12px Barlow;text-transform:uppercase;letter-spacing:.05em;color:var(--c)}.dbk p{margin:2px 0 0;line-height:1.4}
-#shop .acts{position:sticky;bottom:calc(-1 * var(--mbp,16px));margin:0 calc(-1 * var(--mbp,16px)) calc(-1 * var(--mbp,16px));padding:12px var(--mbp,16px) calc(12px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);z-index:3;justify-content:center}.sban{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;align-items:center;padding:10px 14px;border-radius:14px;background:linear-gradient(135deg,#1d2b64,#6f8fd8);color:#fff}.sban b{font:800 18px "Barlow Condensed",sans-serif}.sban span{font:600 13px Barlow;opacity:.9}.mbar{width:100%;height:10px;border-radius:6px;background:var(--tint);overflow:hidden;margin:6px 0 4px}.mbar span{display:block;height:100%;background:#d6262f}
+#shop .acts{position:sticky;bottom:calc(-1 * var(--mbp,16px));margin:0 calc(-1 * var(--mbp,16px)) calc(-1 * var(--mbp,16px));padding:12px var(--mbp,16px) calc(12px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);z-index:3;justify-content:center}.albtn{display:inline-flex;align-items:center;gap:5px;min-height:38px;padding:0 10px;font-size:14px!important;margin-left:auto;border-radius:999px;background:var(--card);border:2px solid var(--blue);color:var(--blue);font:700 15px Barlow;font-variant-numeric:tabular-nums}.albtn svg{flex:none;width:18px!important;height:18px!important}
+.abox{max-width:440px;display:flex;flex-direction:column;padding-bottom:0}.alhd{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.alhd span{font:700 16px Barlow;color:var(--mut)}
+.albar{height:8px;border-radius:6px;background:var(--line);overflow:hidden;margin:8px 0 10px}.albar span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#8b5cf6);border-radius:6px}
+.apages{position:relative;perspective:1600px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.apage{position:absolute;left:0;top:0;width:100%;height:100%;background:var(--tint);border-radius:6px 16px 16px 6px;padding:10px;box-shadow:inset 0 0 0 1px var(--line),inset 6px 0 10px -6px rgba(20,30,90,.25);text-align:left;transform-origin:left center;backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform;overflow:hidden}
+.apage.hid,.aback.hid{visibility:hidden}.ashade{position:absolute;inset:0;pointer-events:none;opacity:0;border-radius:inherit}
+.apage .ashade{background:linear-gradient(90deg,rgba(20,30,90,.0),rgba(20,30,90,.35))}.aback{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:16px 6px 6px 16px;transform-origin:left center;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:repeating-linear-gradient(0deg,transparent 0 23px,rgba(59,91,219,.08) 23px 24px),linear-gradient(270deg,#dfe4f5,var(--tint) 30%);box-shadow:inset 0 0 0 1px var(--line);z-index:5;pointer-events:none}
+.aph{display:flex;justify-content:space-between;align-items:center;margin:0 2px 8px}.aph b{font:800 22px "Barlow Condensed"}.aph span{font:700 14px Barlow;color:var(--mut)}.aph span.done{color:#1f9d55}.asub{margin:-4px 2px 8px;font:600 13px Barlow;color:var(--mut)}
+.agrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.acard{position:relative;aspect-ratio:3/4.3;border-radius:11px;background:var(--card);border:2px solid var(--rc,var(--line));overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:4px 4px 5px}
+.acard svg{width:100%;flex:1;min-height:0;border-radius:7px;background:var(--tint)}.acard b{font:600 11.5px/1.15 Barlow;text-align:center;margin-top:3px;min-height:2.3em;display:flex;align-items:center}
+.acard.av svg{filter:grayscale(1);opacity:.45}.acard.av{border-style:dashed}.acard em{position:absolute;top:6px;left:6px;right:6px;font:700 10px Barlow;font-style:normal;text-align:center;background:var(--card);border-radius:6px;padding:2px 3px;color:var(--blue)}
+.acard.lk{background:linear-gradient(160deg,#262d63,#14194a);border-color:#3a427e;color:#c9cff5}.acard.lk .q{flex:1;display:grid;place-items:center;font:800 40px "Barlow Condensed";color:#5d67b8}.acard.lk b{color:#dfe3ff;font-size:11px}
+.acard.own::after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);pointer-events:none}
+.arew{margin:8px 2px 2px;font:600 13px Barlow;color:var(--mut);text-align:center}.arew.ok{color:#1f9d55}
+.adots{display:flex;justify-content:center;gap:6px;margin:10px 0 2px}.adots button{width:8px;height:8px;min-height:0;padding:0;border-radius:50%;border:0;background:var(--line)}.adots button.on{background:var(--blue);width:20px;border-radius:4px}
+#album .acts{position:sticky;bottom:0;margin:0 -16px;padding:10px 16px calc(12px + env(safe-area-inset-bottom));background:var(--card);justify-content:center}
+.sban{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;align-items:center;padding:10px 14px;border-radius:14px;background:linear-gradient(135deg,#1d2b64,#6f8fd8);color:#fff}.sban b{font:800 18px "Barlow Condensed",sans-serif}.sban span{font:600 13px Barlow;opacity:.9}.mbar{width:100%;height:10px;border-radius:6px;background:var(--tint);overflow:hidden;margin:6px 0 4px}.mbar span{display:block;height:100%;background:#d6262f}
 .earng{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 4px}.earng div{background:var(--tint);border-radius:12px;padding:10px 8px;display:grid;gap:2px;text-align:center}.earng div:last-child{grid-column:1/-1}.earng b{color:var(--blue);font:800 20px/1.1 Barlow}.earng span{font-size:14px;color:var(--ink)}.earnl{list-style:none;margin:0 0 12px;padding:0}.earnl li{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}.earnl b{min-width:44px;color:var(--blue);font-size:17px}
 .soon{display:flex;justify-content:space-between;align-items:center;gap:10px;border:2px dashed var(--line);border-radius:12px;padding:12px;color:var(--mut)}.soon b{color:var(--ink)}
 @media(prefers-reduced-motion:reduce){.cpop.go{animation:none}}
@@ -313,7 +330,7 @@ body{padding-bottom:76px}.toast{bottom:84px}}
   <section class="card2 jjc" id="jj" hidden></section>
   <section class="board">
     <div class="mascot">
-      <div class="mtop"><button type="button" class="coinbtn" id="coinbtn" aria-label="Mes protéines"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 6 H15 L13.6 18 H6.4Z" fill="#fff"/><rect x="4.5" y="3.5" width="11" height="3" rx="1" fill="#ffd34d"/><path d="M9 3.5 V1.5 H11 V3.5" fill="#ffd34d"/><path d="M6 11 H14" stroke="var(--blue)" stroke-width="1.2" opacity=".5"/><text x="10" y="16" text-anchor="middle" font-family="Arial" font-weight="900" font-size="5" fill="var(--blue)">P</text></svg><b id="coin-n">0</b><span class="cpop" id="cpop"></span></button><button type="button" class="shopbtn" id="shop-open">Boutique</button></div>
+      <div class="mtop"><button type="button" class="coinbtn" id="coinbtn" aria-label="Mes protéines"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 6 H15 L13.6 18 H6.4Z" fill="#fff"/><rect x="4.5" y="3.5" width="11" height="3" rx="1" fill="#ffd34d"/><path d="M9 3.5 V1.5 H11 V3.5" fill="#ffd34d"/><path d="M6 11 H14" stroke="var(--blue)" stroke-width="1.2" opacity=".5"/><text x="10" y="16" text-anchor="middle" font-family="Arial" font-weight="900" font-size="5" fill="var(--blue)">P</text></svg><b id="coin-n">0</b><span class="cpop" id="cpop"></span></button><button type="button" class="albtn" id="al-open" aria-label="Mon album de cosmétiques"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="3" y="2.5" width="14" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="5.6" y="5" width="3.6" height="4.4" rx=".8" fill="currentColor"/><rect x="10.8" y="5" width="3.6" height="4.4" rx=".8" fill="currentColor" opacity=".45"/><rect x="5.6" y="11" width="3.6" height="4.4" rx=".8" fill="currentColor" opacity=".45"/><rect x="10.8" y="11" width="3.6" height="4.4" rx=".8" fill="currentColor"/></svg><b id="al-n">0/0</b></button><button type="button" class="shopbtn" id="shop-open">Boutique</button></div>
       <button type="button" class="figbtn" id="figbtn" aria-label="Changer la pose de ton personnage"><svg id="fig" viewBox="0 0 240 300" role="img" aria-label="Personnage dont la forme suit tes écarts"></svg></button>
       <small class="posehint" id="posehint">Touche ton personnage pour changer de pose</small>
       <div class="state" id="state"></div>
@@ -527,6 +544,13 @@ body{padding-bottom:76px}.toast{bottom:84px}}
   <small class="k" id="mile-next"></small>
   <div class="acts" style="justify-content:center"><button class="b-ok" id="mile-x" type="button">Continuer</button><button class="b-line share-btn" type="button">Partager ma série</button></div>
 </div></div>
+<div class="modal" id="album" hidden><div class="mbox abox" role="dialog" aria-modal="true" aria-labelledby="al-h">
+  <div class="alhd"><h3 class="mdh" id="al-h">Mon album</h3><span id="al-tot"></span></div>
+  <div class="albar"><span id="al-bar"></span></div>
+  <div class="apages" id="al-pages"></div>
+  <div class="adots" id="al-dots"></div>
+  <div class="acts"><button type="button" id="al-x">Fermer</button></div>
+</div></div>
 <div class="modal" id="mdef" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="md-h" style="max-width:420px">
   <h3 class="mdh" id="md-h">Défi du mois</h3>
   <p class="k" id="md-sub" style="margin:4px 0 12px"></p>
@@ -581,7 +605,7 @@ const cat=k=>CATS.find(c=>c.k===k)||CATS[4];
 const isE=e=>e.kind?e.kind==='ecart':!e.planned, isR=e=>e.kind==='resist', isP=e=>e.kind?e.kind==='planned':!!e.planned;
 let S={start:Date.now(),comps:[],events:[]};
 let ref=null,writing=Promise.resolve(),lastDeleted=null,lastDelC=null,toastT=0,mode='ecart';
-const norm=d=>({targets:d.targets&&typeof d.targets==='object'?JSON.parse(JSON.stringify(d.targets)):{},mdef:d.mdef&&typeof d.mdef==='object'?{...d.mdef}:{},tourV:d.tourV||0,jokers:Math.max(0,Math.min(2,d.jokers|0)),jkLog:Array.isArray(d.jkLog)?d.jkLog.filter(x=>typeof x==='number'):[],miles:d.miles&&typeof d.miles==='object'?{...d.miles}:{},reasons:Array.isArray(d.reasons)?d.reasons.filter(x=>typeof x==='string').slice(0,3):[],coins:typeof d.coins==='number'?d.coins:undefined,earn:d.earn&&typeof d.earn==='object'?JSON.parse(JSON.stringify(d.earn)):{},owned:d.owned&&typeof d.owned==='object'?{...d.owned}:{},equip:d.equip&&typeof d.equip==='object'?{...d.equip}:{},defis:d.defis&&typeof d.defis==='object'?{...d.defis}:{},remind:d.remind&&typeof d.remind==='object'?{...d.remind}:null,lastVisit:typeof d.lastVisit==='number'?d.lastVisit:0,days:d.days&&typeof d.days==='object'?{...d.days}:{},cos:d.cos&&typeof d.cos==='object'?{...d.cos}:{},prep:d.prep&&typeof d.prep==='object'?JSON.parse(JSON.stringify(d.prep)):{},recCel:typeof d.recCel==='number'?d.recCel:0,pose:typeof d.pose==='string'?d.pose:null,poseAc:typeof d.poseAc==='string'?d.poseAc:null,leo:typeof d.leo==='string'&&/^#[0-9a-f]{6}$/i.test(d.leo)?d.leo:null,tour:!!d.tour,theme:typeof d.theme==='string'&&/^#[0-9a-f]{6}$/i.test(d.theme)?d.theme:null,profile:d.profile&&typeof d.profile==='object'?{...d.profile}:null,start:d.start,comps:Array.isArray(d.comps)?d.comps.map(c=>({...c})):d.comp?[{id:'c0',name:'Compétition',t:d.comp}]:[],events:Array.isArray(d.events)?[...d.events]:[],goals:d.goals&&typeof d.goals==='object'?{...d.goals}:{},badges:d.badges&&typeof d.badges==='object'?{...d.badges}:null});
+const norm=d=>({album:d.album&&typeof d.album==='object'?{...d.album}:{},targets:d.targets&&typeof d.targets==='object'?JSON.parse(JSON.stringify(d.targets)):{},mdef:d.mdef&&typeof d.mdef==='object'?{...d.mdef}:{},tourV:d.tourV||0,jokers:Math.max(0,Math.min(2,d.jokers|0)),jkLog:Array.isArray(d.jkLog)?d.jkLog.filter(x=>typeof x==='number'):[],miles:d.miles&&typeof d.miles==='object'?{...d.miles}:{},reasons:Array.isArray(d.reasons)?d.reasons.filter(x=>typeof x==='string').slice(0,3):[],coins:typeof d.coins==='number'?d.coins:undefined,earn:d.earn&&typeof d.earn==='object'?JSON.parse(JSON.stringify(d.earn)):{},owned:d.owned&&typeof d.owned==='object'?{...d.owned}:{},equip:d.equip&&typeof d.equip==='object'?{...d.equip}:{},defis:d.defis&&typeof d.defis==='object'?{...d.defis}:{},remind:d.remind&&typeof d.remind==='object'?{...d.remind}:null,lastVisit:typeof d.lastVisit==='number'?d.lastVisit:0,days:d.days&&typeof d.days==='object'?{...d.days}:{},cos:d.cos&&typeof d.cos==='object'?{...d.cos}:{},prep:d.prep&&typeof d.prep==='object'?JSON.parse(JSON.stringify(d.prep)):{},recCel:typeof d.recCel==='number'?d.recCel:0,pose:typeof d.pose==='string'?d.pose:null,poseAc:typeof d.poseAc==='string'?d.poseAc:null,leo:typeof d.leo==='string'&&/^#[0-9a-f]{6}$/i.test(d.leo)?d.leo:null,tour:!!d.tour,theme:typeof d.theme==='string'&&/^#[0-9a-f]{6}$/i.test(d.theme)?d.theme:null,profile:d.profile&&typeof d.profile==='object'?{...d.profile}:null,start:d.start,comps:Array.isArray(d.comps)?d.comps.map(c=>({...c})):d.comp?[{id:'c0',name:'Compétition',t:d.comp}]:[],events:Array.isArray(d.events)?[...d.events]:[],goals:d.goals&&typeof d.goals==='object'?{...d.goals}:{},badges:d.badges&&typeof d.badges==='object'?{...d.badges}:null});
 try{const l=JSON.parse(localStorage.getItem(LS));if(l&&Array.isArray(l.events))S=norm(l)}catch(e){}
 S=norm(S);
 
@@ -662,7 +686,7 @@ function checkBadges(silent){
 
 const COSD=[{id:'phenix',badge:'x_phenix',secret:true,n:'Tenue Phénix',d:'Secret'},{id:'band',badge:'b7',n:'Bandeau',d:'7 bilans du soir d’affilée'},{id:'laurel',badge:'b30',n:'Couronne de lauriers',d:'30 bilans du soir d’affilée'},{id:'wrist',badge:'s7',n:'Bandes de poignets',d:'7 jours sans écart'},{id:'sparkle',badge:'s14',n:'Léotard pailleté',d:'14 jours sans écart'},{id:'gold',badge:'s21',n:'Tenue dorée',d:'21 jours sans écart'},{id:'podium',badge:'comp',n:'Podium',d:'Arriver sans écart à une compétition'}];
 const cosHas=id=>{const c=COSD.find(x=>x.id===id);return !!(c&&S.badges&&S.badges[c.badge])};
-const cosOn=id=>cosHas(id)&&!(S.cos&&S.cos[id]===false);
+let COSF=null;const cosOn=id=>COSF?COSF.includes(id):cosHas(id)&&!(S.cos&&S.cos[id]===false);
 const PODIUM='<path d="M62 279 H178 V300 H62Z" fill="#e8b923"/><path d="M62 279 H178 V284 H62Z" fill="#fff3c4" opacity=".75"/><text x="120" y="298" text-anchor="middle" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="800" font-size="15" fill="#7a5600">1</text>';
 const SPKP=[[.12,.18],[.5,.08],[.86,.24],[.3,.38],[.7,.46],[.14,.62],[.52,.7],[.88,.66],[.36,.9],[.74,.86],[.24,.12],[.62,.28]];
 function SPK(x,w,y,hh){return '<g>'+SPKP.map(([a,b],i)=>i%4===1?`<path d="M${(x+a*w).toFixed(1)} ${(y+b*hh-3).toFixed(1)}l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" fill="#fff" opacity=".95"/>`:`<circle cx="${(x+a*w).toFixed(1)}" cy="${(y+b*hh).toFixed(1)}" r="1.3" fill="#fff" opacity=".85"/>`).join('')+'</g>'}
@@ -887,7 +911,7 @@ function render(){
     <div><div class="what">${title}</div><div class="when">${new Date(e.t).toLocaleString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div>${tags?`<div class="tags">${tags}</div>`:''}${e.note?`<div class="note">${esc(e.note)}</div>`:''}</div>
     <button data-del="${esc(e.id)}" aria-label="Supprimer">Supprimer</button></li>`}).join(''):'<li class="empty">Rien d’enregistré pour l’instant. Le compteur tourne depuis le début du défi.</li>';
   if(document.activeElement!==$('s-start'))$('s-start').value=toInput(S.start);
-  renderCoins();renderStreak();renderDefi();renderRemind();syncProfileUI();applyTheme();if(window.applyIcons)applyIcons();renderCos();renderDay();renderMorn();renderReasons();renderPrep();renderSleep();renderJJ();renderTargets();renderMDef();
+  renderCoins();renderStreak();renderDefi();renderRemind();syncProfileUI();applyTheme();if(window.applyIcons)applyIcons();renderCos();renderDay();renderMorn();renderReasons();renderPrep();renderSleep();renderAlbumN();renderJJ();renderTargets();renderMDef();
   renderComps(false);drawEvo();
 }
 
@@ -1286,7 +1310,7 @@ function openMDef(){const st=mdState(),d=st.d,y=d.getFullYear(),m=d.getMonth(),n
   $('md-st').textContent=st.done?'Défi réussi, bravo !':need>left+1?`Il reste ${left+1} jour${left?'s':''} : ce mois-ci c’est raté, mais chaque défi relevé rapporte quand même 5 protéines.`:`Encore ${need} défi${need>1?'s':''} à relever · ${left+1} jour${left?'s':''} restant${left?'s':''}`;
   $('mdef').hidden=false}
 $('md-open').addEventListener('click',openMDef);$('md-x').addEventListener('click',()=>{$('mdef').hidden=true});$('mdef').addEventListener('click',e=>{if(e.target.id==='mdef')$('mdef').hidden=true});
-document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('mdef').hidden)$('mdef').hidden=true;if(!$('breath').hidden){brStop();$('breath').hidden=true}});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('album').hidden)$('album').hidden=true;if(!$('mdef').hidden)$('mdef').hidden=true;if(!$('breath').hidden){brStop();$('breath').hidden=true}});
 // mode dernière semaine
 function prepItems(){const d=curDisc(),base=[['sac','Sac prêt la veille'],['repas',"Repas de la veille prévu (rien de nouveau)"],['eau',"Gourde et collations pour la compét'"],['dodo','Coucher tôt la veille'],['lic','Licence et convocation']];
   const gear=d==='gam'?[['man','Maniques (anneaux, barre fixe, barres)'],['tenue','Léotard, short et sokol'],['bandes','Bandes / strap'],['mag','Magnésie']]:d==='gaf'?[['man','Maniques (barres asymétriques)'],['tenue','Justaucorps de compétition'],['chev','Élastiques, barrettes, laque'],['bandes','Bandes / strap'],['mag','Magnésie']]:d==='gac'?[['tenue','Tenue coordonnée avec tes partenaires'],['fiche','Fiches de difficulté (tariff sheets)'],['musique','Musiques des exercices (clé USB + secours)'],['bandes','Bandes / strap poignets'],['mag','Magnésie'],['chev','Cheveux, maquillage et laque prêts']]:[['tenue','Tenue de compétition']];
@@ -1445,6 +1469,62 @@ const SCATS=['item','bg','tenue','earn','bonus'];
    const ms=Math.round(Math.max(140,Math.min(260,(W-Math.abs(dx))/Math.max(1,Math.abs(vx)*1.4))));mv(pane,-dir*(W+16),ms);mv(pk,0,ms);
    setTimeout(()=>{shopCat=SCATS[n];armed=null;renderShop();clr(pane);clr(pk);prep(null);busy=false;const mb=box;if(mb.scrollTop>wrap.offsetTop-60)mb.scrollTop=Math.max(0,wrap.offsetTop-60)},ms+20)};
  box.addEventListener('touchend',end,{passive:true});box.addEventListener('touchcancel',end,{passive:true})}
+// album de cosmétiques
+const ALREW=100,MRANGE={hiver:'décembre à février',printemps:'mars à mai',ete:'juin à août',automne:'septembre à novembre'};
+function alFits(x){if(x.disc&&!x.disc.includes(curDisc()))return false;if(x.sex&&sexOf()!==x.sex)return false;if(x.gac&&!isAc())return false;return true}
+function alPages(){const it=SHOPI.filter(alFits),P=[
+  {k:'item',n:'Matériel',l:it.filter(x=>x.cat==='item'&&!x.season&&x.month==null)},
+  {k:'bg',n:'Décors',l:it.filter(x=>x.cat==='bg'&&!x.season&&x.month==null&&!x.secret)},
+  {k:'tenue',n:'Tenues',l:it.filter(x=>x.cat==='tenue'&&!x.season&&x.month==null)},
+  ...['hiver','printemps','ete','automne'].map(k=>({k,n:SEAS[k].n,l:it.filter(x=>x.season===k)})),
+  {k:'ev',n:'Évènements',l:it.filter(x=>x.month!=null)},
+  {k:'badge',n:'Récompenses de badges',l:COSD.filter(c=>!c.secret).map(c=>({...c,cos:true,r:'m'}))},
+  {k:'secret',n:'Secrets',l:[...it.filter(x=>x.secret),...COSD.filter(c=>c.secret).map(c=>({...c,cos:true,r:'s'}))]}];
+  return P.filter(p=>p.l.length)}
+const alOwn=x=>x.cos?cosHas(x.id):ownsIt(x);
+function alState(x){if(alOwn(x))return 'own';if(x.cos||x.secret)return 'lk';if(x.merit)return 'lk';if(x.season&&!inSeason(x.season))return 'lk';if(x.month!=null&&new Date().getMonth()!==mOf(x))return 'lk';return 'av'}
+function alHint(x){if(x.secret)return 'Secret';if(x.cos)return x.d;if(x.merit)return '7 jours sans écart';if(x.season)return ({head:'Accessoire de tête',neck:'Accessoire de cou',face:'Accessoire visage',motif:'Tenue',bg:'Décor'})[slotOf(x)]||'Cosmétique';if(x.month!=null)return (x.ev||'Évènement')+' · défi du mois';return ''}
+function alPrev(x,f){let pv,vb='0 0 240 300';const tn=x.cat==='tenue',pose=x.id==='duo'?'porte':isAc()?'salut_ac':'salut';
+  if(x.cos){EQ={};COSF=[x.id];pv=figSVG(f,sexOf(),pose).replace(' id="fig-g"','');COSF=null;EQ=null;vb=x.id==='podium'?'0 0 240 300':'60 20 120 150'}
+  else{EQ=tn?{[slotOf(x)]:x.merit?Math.max(1,auraLvl()||1):x.id}:{bg:x.cat==='bg'?x.id:null,item:x.cat==='item'?x.id:null};COSF=[];pv=figSVG(f,sexOf(),tn?pose:'salut').replace(' id="fig-g"','');COSF=null;EQ=null;
+    vb=x.cat==='item'?'150 200 90 100':tn&&!['duo','aura'].includes(x.id)?'60 20 120 150':'0 0 240 300'}
+  return `<svg viewBox="${vb}" aria-hidden="true">${pv}</svg>`}
+function alCounts(){const P=alPages();let o=0,t=0;P.forEach(p=>{t+=p.l.length;o+=p.l.filter(alOwn).length});return {o,t,P}}
+function renderAlbumN(){const c=alCounts();$('al-n').textContent=c.o+'/'+c.t}
+function renderAlbum(){const f=form(Date.now()),{o,t,P}=alCounts();$('al-tot').textContent=`${o} / ${t}`;$('al-bar').style.width=(t?o/t*100:0)+'%';
+  $('al-pages').innerHTML=P.map(p=>{const no=p.l.filter(alOwn).length,done=no===p.l.length,got=S.album&&S.album[p.k];
+    return `<section class="apage" aria-label="${esc(p.n)}"><i class="ashade"></i><div class="aph"><b>${esc(p.n)}</b><span class="${done?'done':''}">${done?'✓ ':''}${no} / ${p.l.length}</span></div>${SEAS[p.k]?`<p class="asub">${inSeason(p.k)?`En boutique jusqu’au ${seasonEnd(p.k).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})}`:`Arrive en ${MOIS[SEAS[p.k].m[0]]}, jusqu’à fin ${MOIS[SEAS[p.k].m[2]]}`}</p>`:p.k==='ev'?'<p class="asub">Une récompense exclusive par évènement, à gagner avec le défi du mois</p>':''}<div class="agrid">${p.l.map(x=>{const st=alState(x),R=RAR[x.r]||RAR.c;
+      if(st==='lk')return `<div class="acard lk"><span class="q">?</span><b>${esc(alHint(x))}</b></div>`;
+      return `<div class="acard ${st}" style="--rc:${st==='own'?R.col:'var(--line)'}">${alPrev(x,f)}<b>${esc(x.n)}</b>${st==='av'?`<em>${x.month!=null?'Défi du mois':x.merit?'À mériter':'En boutique'}</em>`:''}</div>`}).join('')}</div>
+      <p class="arew${got?' ok':''}">${got?`Page complète · +${ALREW} protéines reçues`:`Complète la page : +${ALREW} protéines`}</p></section>`}).join('');
+  $('al-dots').innerHTML=P.map((p,i)=>`<button type="button" aria-label="Page ${i+1} : ${esc(p.n)}"></button>`).join('');$('al-pages').insertAdjacentHTML('beforeend','<div class="aback hid"></div>')}
+function alCheck(){const {P}=alCounts();let n=0;P.forEach(p=>{if(p.l.every(alOwn)&&!(S.album&&S.album[p.k])){S.album={...(S.album||{}),[p.k]:Date.now()};n++}});if(n){addCoins(ALREW*n,'album');save();celebrate();figAnim('jump');toast(`Page d’album complète : +${ALREW*n} protéines !`,false)}return n}
+function openAlbum(){alCheck();renderAlbum();$('album').hidden=false;alI=0;alLayout()}
+$('al-open').addEventListener('click',openAlbum);$('al-x').addEventListener('click',()=>{$('album').hidden=true});$('album').addEventListener('click',e=>{if(e.target.id==='album')$('album').hidden=true});
+let alI=0;
+function alLayout(){const box=$('al-pages'),pg=[...box.querySelectorAll('.apage')];box.style.height='';pg.forEach(e=>{e.style.position='relative';e.style.height='auto'});const H=Math.max(...pg.map(e=>e.offsetHeight));pg.forEach(e=>{e.style.position='';e.style.height=''});box.style.height=H+'px';alSet(alI)}
+function alSet(i){const box=$('al-pages'),pg=[...box.querySelectorAll('.apage')];alI=Math.max(0,Math.min(pg.length-1,i));
+  pg.forEach((e,j)=>{e.style.transition='none';e.style.transform=j<alI?'rotateY(-180deg)':'none';e.classList.toggle('hid',j!==alI);e.style.zIndex=j===alI?2:1;e.querySelector('.ashade').style.opacity=0});
+  box.querySelector('.aback').classList.add('hid');$('al-dots').querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===alI))}
+{const box=$('al-pages');let sx=0,sy=0,dx=0,mode=-1,W=1,lt=0,lx=0,vx=0,busy=false,mv=null,und=null,dir=0;const RMf=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const pages=()=>[...box.querySelectorAll('.apage')],back=()=>box.querySelector('.aback');
+ function pose(p,ms){const a=-180*p,b=back(),ez='cubic-bezier(.3,.7,.3,1)';[mv,b].forEach(e=>e.style.transition=ms?`transform ${ms}ms ${ez}`:'none');
+   mv.style.transform=`rotateY(${a}deg)`;b.style.transform=`rotateY(${a+180}deg)`;const sh=mv.querySelector('.ashade'),su=und.querySelector('.ashade');
+   [sh,su].forEach(e=>e.style.transition=ms?`opacity ${ms}ms`:'none');sh.style.opacity=Math.min(1,p*1.6);su.style.opacity=(Math.sin(Math.PI*p)*.55).toFixed(2)}
+ function begin(d){const pg=pages(),n=alI+d;if(n<0||n>=pg.length)return false;dir=d;
+   if(d>0){mv=pg[alI];und=pg[n]}else{mv=pg[n];und=pg[alI]}
+   und.classList.remove('hid');mv.classList.remove('hid');und.style.zIndex=2;mv.style.zIndex=4;back().classList.remove('hid');und.style.transform='none';pose(d>0?0:1,0);return true}
+ function finish(go){busy=true;const ms=RMf()?0:Math.round(420);const target=dir>0?(go?1:0):(go?0:1);pose(target,ms);
+   setTimeout(()=>{busy=false;if(go)alSet(alI+dir);else alSet(alI);mv=und=null},ms+30)}
+ box.addEventListener('pointerdown',e=>{if(busy||e.button>0)return;sx=lx=e.clientX;sy=e.clientY;lt=e.timeStamp;dx=0;vx=0;mode=0;W=box.clientWidth});
+ box.addEventListener('pointermove',e=>{if(mode<0)return;const mx=e.clientX-sx,my=e.clientY-sy;
+   if(mode===0){if(Math.abs(mx)<8&&Math.abs(my)<8)return;if(Math.abs(mx)<=Math.abs(my)*1.2){mode=-1;return}if(!begin(mx<0?1:-1)){mode=-1;return}mode=1;try{box.setPointerCapture(e.pointerId)}catch(_){}}
+   vx=vx*.4+.6*(e.clientX-lx)/Math.max(1,e.timeStamp-lt);lx=e.clientX;lt=e.timeStamp;dx=mx;
+   const p=dir>0?Math.min(1,Math.max(0,-dx/W)):Math.min(1,Math.max(0,1-dx/W));pose(p,0)});
+ const end=()=>{if(mode!==1){mode=-1;return}mode=-1;const p=dir>0?-dx/W:dx/W;finish(p>.28||(Math.abs(vx)>.35&&Math.sign(vx)===-dir))};
+ box.addEventListener('pointerup',end);box.addEventListener('pointercancel',()=>{if(mode===1){mode=-1;finish(false)}else mode=-1});
+ $('al-dots').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||busy)return;const i=[...b.parentNode.children].indexOf(b);if(i===alI)return;
+   const d=i>alI?1:-1;alSet(i-d);if(begin(d))finish(true)});}
 function openShop(){armed=null;$('shop').hidden=false;renderShop()}
 $('shop-open').addEventListener('click',openShop);$('coinbtn').addEventListener('click',()=>{shopCat='earn';openShop()});
 $('shop-x').addEventListener('click',()=>{$('shop').hidden=true});
