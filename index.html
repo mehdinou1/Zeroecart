@@ -43,7 +43,7 @@ h2{font-size:32px;line-height:1.05;margin:0 0 16px;font-weight:700;text-wrap:bal
 .cd b{font:700 32px/1 "Barlow Condensed";background:rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;white-space:nowrap}
 .cd b i{font:600 14px Barlow;font-style:normal;opacity:.8;margin-left:3px}
 .board{margin-top:calc(-1 * clamp(70px,9vw,110px));display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:0;background:var(--card);border-radius:22px;box-shadow:0 18px 50px rgba(20,30,90,.18);overflow:hidden;border:1px solid var(--line)}
-.mascot{background:var(--tint);position:relative;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:18px}
+.mascot{background:var(--tint);position:relative;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:58px 18px 18px}
 .mascot svg{width:100%;max-width:300px;height:auto;display:block}
 .state{font:700 22px/1.1 "Barlow Condensed";text-align:center;margin-top:4px}
 .gauge{width:100%;max-width:300px;margin-top:10px}
@@ -207,10 +207,10 @@ body[data-swipe=l] .tab.on{animation:swl .28s ease-out}body[data-swipe=r] .tab.o
 #shop .acts{position:sticky;bottom:calc(-1 * var(--mbp,16px));margin:0 calc(-1 * var(--mbp,16px)) calc(-1 * var(--mbp,16px));padding:12px var(--mbp,16px) calc(12px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);z-index:3;justify-content:center}.albtn{display:inline-flex;align-items:center;gap:5px;min-height:38px;padding:0 10px;font-size:14px!important;margin-left:auto;border-radius:999px;background:var(--card);border:2px solid var(--blue);color:var(--blue);font:700 15px Barlow;font-variant-numeric:tabular-nums}.albtn svg{flex:none;width:18px!important;height:18px!important}
 .abox{max-width:440px;display:flex;flex-direction:column;padding-bottom:0}.alhd{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.alhd span{font:700 16px Barlow;color:var(--mut)}
 .albar{height:8px;border-radius:6px;background:var(--line);overflow:hidden;margin:8px 0 10px}.albar span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#8b5cf6);border-radius:6px}
-.apages{position:relative;perspective:1600px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
-.apage{position:absolute;left:0;top:0;width:100%;height:100%;background:var(--tint);border-radius:6px 16px 16px 6px;padding:10px;box-shadow:inset 0 0 0 1px var(--line),inset 6px 0 10px -6px rgba(20,30,90,.25);text-align:left;transform-origin:left center;backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform;overflow:hidden}
+.apages{flex:none;position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.apage{position:absolute;left:0;top:0;width:100%;height:100%;background:var(--tint);border-radius:6px 16px 16px 6px;padding:10px;box-shadow:inset 0 0 0 1px var(--line),inset 6px 0 10px -6px rgba(20,30,90,.25);text-align:left;overflow:hidden}
 .apage.hid,.aback.hid{visibility:hidden}.ashade{position:absolute;inset:0;pointer-events:none;opacity:0;border-radius:inherit}
-.apage .ashade{background:linear-gradient(90deg,rgba(20,30,90,.0),rgba(20,30,90,.35))}.aback{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:16px 6px 6px 16px;transform-origin:left center;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:repeating-linear-gradient(0deg,transparent 0 23px,rgba(59,91,219,.08) 23px 24px),linear-gradient(270deg,#dfe4f5,var(--tint) 30%);box-shadow:inset 0 0 0 1px var(--line);z-index:5;pointer-events:none}
+.aback{position:absolute;left:0;top:0;width:100%;height:100%;z-index:5;pointer-events:none;filter:drop-shadow(-6px 0 8px rgba(20,30,90,.28))}.aback i{position:absolute;inset:0;display:block}.agh{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:6px 2px 0;font:700 14px Barlow;color:var(--ink)}.agh:first-child{margin-top:0}.agh small{font:600 12px Barlow;color:var(--mut)}
 .aph{display:flex;justify-content:space-between;align-items:center;margin:0 2px 8px}.aph b{font:800 22px "Barlow Condensed"}.aph span{font:700 14px Barlow;color:var(--mut)}.aph span.done{color:#1f9d55}.asub{margin:-4px 2px 8px;font:600 13px Barlow;color:var(--mut)}
 .agrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
 .acard{position:relative;aspect-ratio:3/4.3;border-radius:11px;background:var(--card);border:2px solid var(--rc,var(--line));overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:4px 4px 5px}
@@ -1470,20 +1470,19 @@ const SCATS=['item','bg','tenue','earn','bonus'];
    setTimeout(()=>{shopCat=SCATS[n];armed=null;renderShop();clr(pane);clr(pk);prep(null);busy=false;const mb=box;if(mb.scrollTop>wrap.offsetTop-60)mb.scrollTop=Math.max(0,wrap.offsetTop-60)},ms+20)};
  box.addEventListener('touchend',end,{passive:true});box.addEventListener('touchcancel',end,{passive:true})}
 // album de cosmétiques
-const ALREW=100,MRANGE={hiver:'décembre à février',printemps:'mars à mai',ete:'juin à août',automne:'septembre à novembre'};
+const ALY=[2026,2027],ALG=[{y:2026,n:'Collection Hiver',d:'décembre à février',f:x=>x.season==='hiver'},{y:2026,n:'Noël',d:'défi de décembre',f:x=>x.id==='noel'},{y:2027,n:'Jour de l’an',d:'défi de janvier',f:x=>x.id==='fete'},{y:2027,n:'Pâques',d:'défi du mois de Pâques',f:x=>x.id==='lapin'},{y:2027,n:'Collection Printemps',d:'mars à mai',f:x=>x.season==='printemps'},{y:2027,n:'Collection Été',d:'juin à août',f:x=>x.season==='ete'},{y:2027,n:'14 juillet',d:'défi de juillet',f:x=>x.id==='feux14'},{y:2027,n:'Collection Automne',d:'septembre à novembre',f:x=>x.season==='automne'},{y:2027,n:'Halloween',d:'défi d’octobre',f:x=>x.id==='squelette'}],ALREW=100,MRANGE={hiver:'décembre à février',printemps:'mars à mai',ete:'juin à août',automne:'septembre à novembre'};
 function alFits(x){if(x.disc&&!x.disc.includes(curDisc()))return false;if(x.sex&&sexOf()!==x.sex)return false;if(x.gac&&!isAc())return false;return true}
 function alPages(){const it=SHOPI.filter(alFits),P=[
   {k:'item',n:'Matériel',l:it.filter(x=>x.cat==='item'&&!x.season&&x.month==null)},
   {k:'bg',n:'Décors',l:it.filter(x=>x.cat==='bg'&&!x.season&&x.month==null&&!x.secret)},
   {k:'tenue',n:'Tenues',l:it.filter(x=>x.cat==='tenue'&&!x.season&&x.month==null)},
-  ...['hiver','printemps','ete','automne'].map(k=>({k,n:SEAS[k].n,l:it.filter(x=>x.season===k)})),
-  {k:'ev',n:'Évènements',l:it.filter(x=>x.month!=null)},
+  ...ALY.map(y=>({k:'y'+y,n:'Saisons et évènements '+y,g:ALG.filter(g=>g.y===y).map(g=>({...g,l:it.filter(g.f)})).filter(g=>g.l.length)})).map(p=>({...p,l:p.g.flatMap(g=>g.l)})),
   {k:'badge',n:'Récompenses de badges',l:COSD.filter(c=>!c.secret).map(c=>({...c,cos:true,r:'m'}))},
   {k:'secret',n:'Secrets',l:[...it.filter(x=>x.secret),...COSD.filter(c=>c.secret).map(c=>({...c,cos:true,r:'s'}))]}];
   return P.filter(p=>p.l.length)}
 const alOwn=x=>x.cos?cosHas(x.id):ownsIt(x);
 function alState(x){if(alOwn(x))return 'own';if(x.cos||x.secret)return 'lk';if(x.merit)return 'lk';if(x.season&&!inSeason(x.season))return 'lk';if(x.month!=null&&new Date().getMonth()!==mOf(x))return 'lk';return 'av'}
-function alHint(x){if(x.secret)return 'Secret';if(x.cos)return x.d;if(x.merit)return '7 jours sans écart';if(x.season)return ({head:'Accessoire de tête',neck:'Accessoire de cou',face:'Accessoire visage',motif:'Tenue',bg:'Décor'})[slotOf(x)]||'Cosmétique';if(x.month!=null)return (x.ev||'Évènement')+' · défi du mois';return ''}
+function alHint(x){if(x.secret)return 'Secret';if(x.cos)return x.d;if(x.merit)return '7 jours sans écart';if(x.season||x.month!=null)return ({head:'Accessoire de tête',neck:'Accessoire de cou',face:'Accessoire visage',motif:'Tenue',bg:'Décor'})[slotOf(x)]||'Cosmétique';if(x.month!=null)return (x.ev||'Évènement')+' · défi du mois';return ''}
 function alPrev(x,f){let pv,vb='0 0 240 300';const tn=x.cat==='tenue',pose=x.id==='duo'?'porte':isAc()?'salut_ac':'salut';
   if(x.cos){EQ={};COSF=[x.id];pv=figSVG(f,sexOf(),pose).replace(' id="fig-g"','');COSF=null;EQ=null;vb=x.id==='podium'?'0 0 240 300':'60 20 120 150'}
   else{EQ=tn?{[slotOf(x)]:x.merit?Math.max(1,auraLvl()||1):x.id}:{bg:x.cat==='bg'?x.id:null,item:x.cat==='item'?x.id:null};COSF=[];pv=figSVG(f,sexOf(),tn?pose:'salut').replace(' id="fig-g"','');COSF=null;EQ=null;
@@ -1491,40 +1490,49 @@ function alPrev(x,f){let pv,vb='0 0 240 300';const tn=x.cat==='tenue',pose=x.id=
   return `<svg viewBox="${vb}" aria-hidden="true">${pv}</svg>`}
 function alCounts(){const P=alPages();let o=0,t=0;P.forEach(p=>{t+=p.l.length;o+=p.l.filter(alOwn).length});return {o,t,P}}
 function renderAlbumN(){const c=alCounts();$('al-n').textContent=c.o+'/'+c.t}
-function renderAlbum(){const f=form(Date.now()),{o,t,P}=alCounts();$('al-tot').textContent=`${o} / ${t}`;$('al-bar').style.width=(t?o/t*100:0)+'%';
-  $('al-pages').innerHTML=P.map(p=>{const no=p.l.filter(alOwn).length,done=no===p.l.length,got=S.album&&S.album[p.k];
-    return `<section class="apage" aria-label="${esc(p.n)}"><i class="ashade"></i><div class="aph"><b>${esc(p.n)}</b><span class="${done?'done':''}">${done?'✓ ':''}${no} / ${p.l.length}</span></div>${SEAS[p.k]?`<p class="asub">${inSeason(p.k)?`En boutique jusqu’au ${seasonEnd(p.k).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})}`:`Arrive en ${MOIS[SEAS[p.k].m[0]]}, jusqu’à fin ${MOIS[SEAS[p.k].m[2]]}`}</p>`:p.k==='ev'?'<p class="asub">Une récompense exclusive par évènement, à gagner avec le défi du mois</p>':''}<div class="agrid">${p.l.map(x=>{const st=alState(x),R=RAR[x.r]||RAR.c;
+let ALF=null;const ALCARD=x=>{const st=alState(x),R=RAR[x.r]||RAR.c;
       if(st==='lk')return `<div class="acard lk"><span class="q">?</span><b>${esc(alHint(x))}</b></div>`;
-      return `<div class="acard ${st}" style="--rc:${st==='own'?R.col:'var(--line)'}">${alPrev(x,f)}<b>${esc(x.n)}</b>${st==='av'?`<em>${x.month!=null?'Défi du mois':x.merit?'À mériter':'En boutique'}</em>`:''}</div>`}).join('')}</div>
+      return `<div class="acard ${st}" style="--rc:${st==='own'?R.col:'var(--line)'}">${alPrev(x,ALF)}<b>${esc(x.n)}</b>${st==='av'?`<em>${x.month!=null?'Défi du mois':x.merit?'À mériter':'En boutique'}</em>`:''}</div>`};
+function renderAlbum(){const f=ALF=form(Date.now()),{o,t,P}=alCounts();$('al-tot').textContent=`${o} / ${t}`;$('al-bar').style.width=(t?o/t*100:0)+'%';
+  $('al-pages').innerHTML=P.map(p=>{const no=p.l.filter(alOwn).length,done=no===p.l.length,got=S.album&&S.album[p.k];
+    return `<section class="apage" aria-label="${esc(p.n)}"><i class="ashade"></i><div class="aph"><b>${esc(p.n)}</b><span class="${done?'done':''}">${done?'✓ ':''}${no} / ${p.l.length}</span></div><div class="agrid">${(p.g||[{l:p.l}]).map(g=>(g.n?`<div class="agh"><span>${esc(g.n)}</span><small>${g.l.filter(alOwn).length}/${g.l.length} · ${esc(g.d)}</small></div>`:'')+g.l.map(ALCARD).join('')).join('')}</div>
       <p class="arew${got?' ok':''}">${got?`Page complète · +${ALREW} protéines reçues`:`Complète la page : +${ALREW} protéines`}</p></section>`}).join('');
-  $('al-dots').innerHTML=P.map((p,i)=>`<button type="button" aria-label="Page ${i+1} : ${esc(p.n)}"></button>`).join('');$('al-pages').insertAdjacentHTML('beforeend','<div class="aback hid"></div>')}
+  $('al-dots').innerHTML=P.map((p,i)=>`<button type="button" aria-label="Page ${i+1} : ${esc(p.n)}"></button>`).join('');$('al-pages').insertAdjacentHTML('beforeend','<div class="aback hid"><i></i></div>')}
 function alCheck(){const {P}=alCounts();let n=0;P.forEach(p=>{if(p.l.every(alOwn)&&!(S.album&&S.album[p.k])){S.album={...(S.album||{}),[p.k]:Date.now()};n++}});if(n){addCoins(ALREW*n,'album');save();celebrate();figAnim('jump');toast(`Page d’album complète : +${ALREW*n} protéines !`,false)}return n}
 function openAlbum(){alCheck();renderAlbum();$('album').hidden=false;alI=0;alLayout()}
 $('al-open').addEventListener('click',openAlbum);$('al-x').addEventListener('click',()=>{$('album').hidden=true});$('album').addEventListener('click',e=>{if(e.target.id==='album')$('album').hidden=true});
 let alI=0;
 function alLayout(){const box=$('al-pages'),pg=[...box.querySelectorAll('.apage')];box.style.height='';pg.forEach(e=>{e.style.position='relative';e.style.height='auto'});const H=Math.max(...pg.map(e=>e.offsetHeight));pg.forEach(e=>{e.style.position='';e.style.height=''});box.style.height=H+'px';alSet(alI)}
 function alSet(i){const box=$('al-pages'),pg=[...box.querySelectorAll('.apage')];alI=Math.max(0,Math.min(pg.length-1,i));
-  pg.forEach((e,j)=>{e.style.transition='none';e.style.transform=j<alI?'rotateY(-180deg)':'none';e.classList.toggle('hid',j!==alI);e.style.zIndex=j===alI?2:1;e.querySelector('.ashade').style.opacity=0});
+  pg.forEach((e,j)=>{e.style.clipPath='';e.classList.toggle('hid',j!==alI);e.style.zIndex=j===alI?2:1;const sh=e.querySelector('.ashade');sh.style.opacity=0;sh.style.background=''});
   box.querySelector('.aback').classList.add('hid');$('al-dots').querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===alI))}
-{const box=$('al-pages');let sx=0,sy=0,dx=0,mode=-1,W=1,lt=0,lx=0,vx=0,busy=false,mv=null,und=null,dir=0;const RMf=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+{const box=$('al-pages');let sx=0,sy=0,dx=0,mode=-1,W=1,H=1,lt=0,lx=0,vx=0,busy=false,mv=null,und=null,dir=0,cur=0,gy=.5,raf=0;const RMf=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
  const pages=()=>[...box.querySelectorAll('.apage')],back=()=>box.querySelector('.aback');
- function pose(p,ms){const a=-180*p,b=back(),ez='cubic-bezier(.3,.7,.3,1)';[mv,b].forEach(e=>e.style.transition=ms?`transform ${ms}ms ${ez}`:'none');
-   mv.style.transform=`rotateY(${a}deg)`;b.style.transform=`rotateY(${a+180}deg)`;const sh=mv.querySelector('.ashade'),su=und.querySelector('.ashade');
-   [sh,su].forEach(e=>e.style.transition=ms?`opacity ${ms}ms`:'none');sh.style.opacity=Math.min(1,p*1.6);su.style.opacity=(Math.sin(Math.PI*p)*.55).toFixed(2)}
- function begin(d){const pg=pages(),n=alI+d;if(n<0||n>=pg.length)return false;dir=d;
+ // pli de page : la ligne de pli part du bord droit, légèrement inclinée selon la hauteur saisie, et le dos de la page se rabat par-dessus
+ function pose(p){cur=p;const b=back(),bi=b.firstChild,t=(gy-.5)*.5*Math.sin(Math.PI*p),xf=W*(1-p),dt=t*Math.min(H,W*1.2)*.5,x1=xf+dt,x2=xf-dt,
+     fx1=2*x1-W,fx2=2*x2-W,c=v=>v.toFixed(1)+'px';
+   mv.style.clipPath=`polygon(0 0,${c(x1)} 0,${c(x2)} 100%,0 100%)`;
+   b.style.clipPath=`polygon(${c(Math.max(fx1,-W))} 0,${c(x1)} 0,${c(x2)} 100%,${c(Math.max(fx2,-W))} 100%)`;
+   const ang=Math.atan2(x1-x2,H)*180/Math.PI,fw=Math.max(1,W-xf);
+   bi.style.background=`linear-gradient(${90+ang}deg,#c9d0e8 0%,#eef1fb ${(30).toFixed(0)}%,#f8f9fe 62%,#d9def0 92%,#b9c1de 100%)`;bi.style.left=c(Math.min(fx1,fx2));bi.style.width=c(Math.max(x1,x2)-Math.min(fx1,fx2));
+   const su=und.querySelector('.ashade'),sm=mv.querySelector('.ashade'),k=Math.sin(Math.PI*p);
+   su.style.background=`linear-gradient(${90+ang}deg,transparent ${c(xf-2)},rgba(20,30,90,${(.32*k+.05).toFixed(2)}) ${c(xf)},transparent ${c(xf+40+60*k)})`;su.style.opacity=1;
+   const fe=(fx1+fx2)/2;sm.style.background=`linear-gradient(${90+ang}deg,transparent ${c(fe-30)},rgba(20,30,90,${(.22*k).toFixed(2)}) ${c(fe)},transparent ${c(fe+1)})`;sm.style.opacity=1}
+ function begin(d){const pg=pages(),n=alI+d;if(n<0||n>=pg.length)return false;dir=d;W=box.clientWidth;H=box.clientHeight;
    if(d>0){mv=pg[alI];und=pg[n]}else{mv=pg[n];und=pg[alI]}
-   und.classList.remove('hid');mv.classList.remove('hid');und.style.zIndex=2;mv.style.zIndex=4;back().classList.remove('hid');und.style.transform='none';pose(d>0?0:1,0);return true}
- function finish(go){busy=true;const ms=RMf()?0:Math.round(420);const target=dir>0?(go?1:0):(go?0:1);pose(target,ms);
-   setTimeout(()=>{busy=false;if(go)alSet(alI+dir);else alSet(alI);mv=und=null},ms+30)}
- box.addEventListener('pointerdown',e=>{if(busy||e.button>0)return;sx=lx=e.clientX;sy=e.clientY;lt=e.timeStamp;dx=0;vx=0;mode=0;W=box.clientWidth});
+   und.classList.remove('hid');mv.classList.remove('hid');und.style.zIndex=1;mv.style.zIndex=3;back().classList.remove('hid');pose(d>0?0:1);return true}
+ function finish(go){busy=true;const to=dir>0?(go?1:0):(go?0:1),from=cur,ms=RMf()?0:Math.round(260+260*Math.abs(to-from)),t0=performance.now();cancelAnimationFrame(raf);
+   const done=()=>{busy=false;alSet(go?alI+dir:alI);mv=und=null};if(!ms){done();return}
+   const step=now=>{const k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,3);pose(from+(to-from)*e);if(k<1)raf=requestAnimationFrame(step);else done()};raf=requestAnimationFrame(step)}
+ box.addEventListener('pointerdown',e=>{if(busy||e.button>0)return;const r=box.getBoundingClientRect();sx=lx=e.clientX;sy=e.clientY;gy=Math.min(1,Math.max(0,(e.clientY-r.top)/r.height));lt=e.timeStamp;dx=0;vx=0;mode=0});
  box.addEventListener('pointermove',e=>{if(mode<0)return;const mx=e.clientX-sx,my=e.clientY-sy;
    if(mode===0){if(Math.abs(mx)<8&&Math.abs(my)<8)return;if(Math.abs(mx)<=Math.abs(my)*1.2){mode=-1;return}if(!begin(mx<0?1:-1)){mode=-1;return}mode=1;try{box.setPointerCapture(e.pointerId)}catch(_){}}
    vx=vx*.4+.6*(e.clientX-lx)/Math.max(1,e.timeStamp-lt);lx=e.clientX;lt=e.timeStamp;dx=mx;
-   const p=dir>0?Math.min(1,Math.max(0,-dx/W)):Math.min(1,Math.max(0,1-dx/W));pose(p,0)});
- const end=()=>{if(mode!==1){mode=-1;return}mode=-1;const p=dir>0?-dx/W:dx/W;finish(p>.28||(Math.abs(vx)>.35&&Math.sign(vx)===-dir))};
+   const p=dir>0?Math.min(1,Math.max(0,-dx/(W*.9))):Math.min(1,Math.max(0,1-dx/(W*.9)));pose(p)});
+ const end=()=>{if(mode!==1){mode=-1;return}mode=-1;const p=dir>0?-dx/W:dx/W;finish(p>.25||(Math.abs(vx)>.35&&Math.sign(vx)===-dir))};
  box.addEventListener('pointerup',end);box.addEventListener('pointercancel',()=>{if(mode===1){mode=-1;finish(false)}else mode=-1});
  $('al-dots').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||busy)return;const i=[...b.parentNode.children].indexOf(b);if(i===alI)return;
-   const d=i>alI?1:-1;alSet(i-d);if(begin(d))finish(true)});}
+   const d=i>alI?1:-1;alSet(i-d);gy=.75;if(begin(d))finish(true)});}
 function openShop(){armed=null;$('shop').hidden=false;renderShop()}
 $('shop-open').addEventListener('click',openShop);$('coinbtn').addEventListener('click',()=>{shopCat='earn';openShop()});
 $('shop-x').addEventListener('click',()=>{$('shop').hidden=true});
